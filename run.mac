@@ -1,0 +1,14 @@
+# Can be run in batch, without graphic
+# or interactively: Idle> /control/execute run.mac
+
+# Change the default number of workers (in multi-threading mode) 
+#/run/numberOfWorkers 4
+
+/control/execute ../setup_detector.mac
+
+#[[[cog
+#	from MMconfig import *
+#	cog.outl("/run/beamOn {}".format(conf["general"]["number_of_gammas"]))
+#]]]
+/run/beamOn 100000
+#[[[end]]]
