@@ -22,11 +22,11 @@ int main(int argc, char** argv) {
 	G4Random::setTheEngine(new CLHEP::RanecuEngine);
 	
 	// Construct the default run manager
-	#ifdef G4MULTITHREADED
-		G4MTRunManager* runManager = new G4MTRunManager;
-	#else
+//	#ifdef G4MULTITHREADED
+//		G4MTRunManager* runManager = new G4MTRunManager;
+//	#else
 		G4RunManager* runManager = new G4RunManager;
-	#endif
+//	#endif
 
 	// Set mandatory initialization classes
 	runManager->SetUserInitialization(new PhysicsList);
