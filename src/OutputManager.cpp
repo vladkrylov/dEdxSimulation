@@ -16,7 +16,7 @@ OutputManager::~OutputManager() {
 
 void OutputManager::Initialize() {
 	//[[[cog from MMconfig import *; import os; cog.outl("G4String fileName = \"{}\";".format(conf["photoconversion"]["out_filename"])) ]]]
-	G4String fileName = "/localscratch/simulation_files/MicroMegas-Simulation/outfiles/photoconversion.root";
+	G4String fileName = "photoconversion.root";
 	//[[[end]]]
 	fRootFile = new TFile(fileName, "RECREATE");
 
