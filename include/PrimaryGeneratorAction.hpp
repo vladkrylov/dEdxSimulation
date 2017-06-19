@@ -8,6 +8,7 @@
 class G4ParticleGun;
 class G4Event;
 class G4Box;
+class DetectorConstruction;
 
 /// The primary generator action class with particle gun.
 /// The default kinematic is a 6 MeV gamma, randomly distribued 
@@ -15,7 +16,7 @@ class G4Box;
 
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
 	public:
-		PrimaryGeneratorAction();    
+		PrimaryGeneratorAction();
 		virtual ~PrimaryGeneratorAction();
 
 		// method from the base class
@@ -27,6 +28,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
 	private:
 		G4ParticleGun*  fParticleGun; // pointer a to G4 gun class
 		G4Box* fEnvelopeBox;
+		DetectorConstruction* fDetector;
 };
 
 #endif

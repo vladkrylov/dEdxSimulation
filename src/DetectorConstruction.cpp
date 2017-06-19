@@ -13,7 +13,8 @@
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
 
-G4VPhysicalVolume* DetectorConstruction::Construct() {  
+G4VPhysicalVolume* DetectorConstruction::Construct()
+{
 	G4NistManager* nist = G4NistManager::Instance();
 
 	// Drift and quenching gases, add your own here if you want to use it
@@ -87,7 +88,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 	G4double temperature = STP_Temperature + 20*kelvin;
 
 	G4Material* mat_detector;
-	G4Material* nobleGas = he;
+	G4Material* nobleGas = ar;
 	G4Material* quencherGas = c4h10;
 	G4double noblePart = 80*perCent;
 	G4double quencherPart = 1 - noblePart;
@@ -99,7 +100,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 	gas_composition->AddMaterial(quencherGas, quencherPart);
 	mat_detector = gas_composition;
 
-	G4Box* solid_detector = new G4Box("Detector", .5*sizeX_detector, .5*sizeY_detector, .5*sizeZ_detector);
+	solid_detector = new G4Box("Detector", .5*sizeX_detector, .5*sizeY_detector, .5*sizeZ_detector);
 	fLogicDetector = new G4LogicalVolume(solid_detector, mat_detector, "Detector");
 	G4VisAttributes* visatt_detector = new G4VisAttributes(G4Colour(1., 1., 1.));
 	visatt_detector->SetForceWireframe(true);
@@ -109,6 +110,17 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 	return fPhysWorld;
 }
 
-void DetectorConstruction::SetPairEnergy(G4double val) {
-  //if(val > 0.0) fCoatingMaterial->GetIonisation()->SetMeanEnergyPerIonPair(val);
+void DetectorConstruction::SetPairEnergy(G4double val)
+{
+  // if(val > 0.0) fCoatingMaterial->GetIonisation()->SetMeanEnergyPerIonPair(val);
 }
+
+G4ThreeVector DetectorConstruction::GetSourcePosition()
+{
+	return (fPhysWorld->GetObjectTranslation() + fPhysDetector->GetObjectTranslation())/2
+			- G4ThreeVector(solid_detector->GetXHalfLength(), 0., 0.);
+}
+
+
+
+

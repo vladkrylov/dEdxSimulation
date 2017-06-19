@@ -16,7 +16,8 @@ void ActionInitialization::BuildForMaster() const {
 	SetUserAction(new RunAction(outManager));
 }
 
-void ActionInitialization::Build() const {
+void ActionInitialization::Build() const
+{
 	OutputManager* outManager = new OutputManager();
 
 	SetUserAction(new PrimaryGeneratorAction());

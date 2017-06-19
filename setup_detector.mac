@@ -14,19 +14,4 @@
 #/tracking/verbose 1
 
 # run simulation
-/gun/particle gamma
-#[[[cog
-#	from MMconfig import *
-#	cog.outl("/gun/energy {} keV".format(conf["general"]["gamma_energy"]))
-#	from numpy import sin, cos
-#	theta = float(conf["general"]["gamma_direction_theta"])
-#	phi = float(conf["general"]["gamma_direction_phi"])
-#	x = sin(theta) * cos(phi)
-#	y = sin(theta) * sin(phi)
-#	z = cos(theta)
-#	cog.outl("/gun/direction {} {} {}".format(x, y, -z))
-#]]]
-/gun/energy 3. keV
-/gun/direction 0.0 0.0 -1.0
-#[[[end]]]
-# theta = arctan(x/z), x = z*tan(theta)
+

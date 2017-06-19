@@ -43,24 +43,6 @@ int main(int argc, char** argv) {
 	visManager->Initialize();
 
 	// Process macro or start UI session
-	/*[[[cogs
-	from MMconfig import *
-
-	def ui_start():
-		cog.outl("G4UIExecutive* ui = new G4UIExecutive(argc, argv);")
-		cog.outl("ui->SessionStart();")
-		cog.outl("delete ui;")
-
-	if "macro_path" in conf["photoconversion"]:
-		macro_path = conf["photoconversion"]["macro_path"]
-		if macro_path != "": # run given macro file
-			cog.outl("G4UImanager* UImanager = G4UImanager::GetUIpointer();")
-			cog.outl("UImanager->ApplyCommand(\"/control/execute {}\");".format(macro_path))
-		else:
-			ui_start()
-	else:
-		ui_start()
-	]]]*/
 	G4UImanager* UImanager = G4UImanager::GetUIpointer();
 	UImanager->ApplyCommand("/control/execute ../vis.mac");
 	//[[[end]]]
