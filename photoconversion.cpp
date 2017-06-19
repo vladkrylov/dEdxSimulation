@@ -11,6 +11,7 @@
 
 #include "G4UImanager.hh"
 #include "QBBC.hh"
+#include "FTFP_BERT.hh"
 
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
@@ -30,6 +31,7 @@ int main(int argc, char** argv) {
 
 	// Set mandatory initialization classes
 	runManager->SetUserInitialization(new PhysicsList);
+//	runManager->SetUserInitialization(new FTFP_BERT);
 	DetectorConstruction* detectorConstruction = new DetectorConstruction();
 	runManager->SetUserInitialization(detectorConstruction);
 
@@ -50,3 +52,4 @@ int main(int argc, char** argv) {
 	delete visManager;
 	delete runManager;
 }
+
