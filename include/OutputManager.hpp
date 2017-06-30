@@ -21,7 +21,6 @@ class OutputManager {
 		void Initialize();
 		void Save();
 		void PrintStatistic();
-		TTree* GetShieldTree() { return fShieldTree; }
 		TTree* GetDetectorTree() { return fDetectorTree; }
 
 		void FillEvent(TTree*, G4Track*);
