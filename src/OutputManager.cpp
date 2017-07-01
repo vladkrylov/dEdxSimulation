@@ -70,30 +70,35 @@ void OutputManager::Save() {
 	}
 }
 
-void OutputManager::FillEvent(TTree* tree, G4Track* track) {
+void OutputManager::FillHit(G4Track* track)
+{
 	G4ThreeVector pos = track->GetPosition();
 	G4ThreeVector dirVertex = track->GetVertexMomentumDirection();
 	G4ThreeVector dir = track->GetMomentumDirection();
-	fPhiVertex = dirVertex.getPhi();
-	fPhi = dir.getPhi();
-	fThetaVertex = dirVertex.getTheta();
-	fTheta = dir.getTheta();
-	fPx = dir.x();
-	fPy = dir.y();
-	fPz = dir.z();
+	fPhiVertex.push_back(dirVertex.getPhi());
+	fPhi.push_back(dir.getPhi());
+	fThetaVertex.push_back(dirVertex.getTheta());
+	fTheta.push_back(dir.getTheta());
+	fPx.push_back(dir.x());
+	fPy.push_back(dir.y());
+	fPz.push_back(dir.z());
 
 	// using garfield++ units here (cm, ns, eV)
-	fPosX = pos.x()/cm;
-	fPosY = pos.y()/cm;
-	fPosZ = pos.z()/cm;
-	fT = track->GetGlobalTime()/ns;
-	fEkinVertex = track->GetVertexKineticEnergy()/eV;
-	fEkin = track->GetKineticEnergy()/eV;
-	fEloss = track->GetVertexKineticEnergy()/eV - track->GetKineticEnergy()/eV;
+	fPosX.push_back(pos.x()/cm);
+	fPosY.push_back(pos.y()/cm);
+	fPosZ.push_back(pos.z()/cm);
+	fT.push_back(track->GetGlobalTime()/ns);
+	fEkinVertex.push_back(track->GetVertexKineticEnergy()/eV);
+	fEkin.push_back(track->GetKineticEnergy()/eV);
+	fEloss.push_back(track->GetVertexKineticEnergy()/eV - track->GetKineticEnergy()/eV);
 
-	fZVertex = track->GetVertexPosition().z()/cm;
-	fTrackLength = track->GetTrackLength()/cm;
-	if (tree) tree->Fill();
+	fZVertex.push_back(track->GetVertexPosition().z()/cm);
+	fTrackLength.push_back(track->GetTrackLength()/cm);
+}
+
+void OutputManager::FillEvent()
+{
+	if (fDetectorTree) fDetectorTree->Fill();
 }
 
 void OutputManager::PrintStatistic() {

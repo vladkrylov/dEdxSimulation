@@ -23,11 +23,11 @@ class OutputManager {
 		void PrintStatistic();
 		TTree* GetDetectorTree() { return fDetectorTree; }
 
-		void FillEvent(TTree*, G4Track*);
+		void FillHit(G4Track*);
+		void FillEvent();
 
 	private:
 		TFile*   fRootFile;
-
 		TTree*   fDetectorTree;
 
 		std::vector<G4double> fPhiVertex, fPhi;
