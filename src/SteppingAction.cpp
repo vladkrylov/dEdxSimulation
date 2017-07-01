@@ -12,7 +12,11 @@
 #include "G4LogicalVolume.hh"
 #include "G4SystemOfUnits.hh"
 
-SteppingAction::SteppingAction(EventAction* eventAction, DetectorConstruction* detector, OutputManager* outManager) : G4UserSteppingAction(), fEventAction(eventAction), fDetector(detector), fOutputManager(outManager) {}
+SteppingAction::SteppingAction(EventAction* eventAction, DetectorConstruction* detector, OutputManager* outManager) :
+G4UserSteppingAction(),
+fEventAction(eventAction),
+fDetector(detector),
+fOutputManager(outManager) {}
 
 SteppingAction::~SteppingAction() {}
 
