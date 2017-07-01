@@ -30,8 +30,8 @@ int main(int argc, char** argv) {
 //	#endif
 
 	// Set mandatory initialization classes
-	runManager->SetUserInitialization(new PhysicsList);
-//	runManager->SetUserInitialization(new FTFP_BERT);
+//	runManager->SetUserInitialization(new PhysicsList);
+	runManager->SetUserInitialization(new FTFP_BERT);
 	DetectorConstruction* detectorConstruction = new DetectorConstruction();
 	runManager->SetUserInitialization(detectorConstruction);
 

@@ -72,8 +72,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 	// World
 	G4double sizeX_world = sizeX_detector + 10*mm;
-	G4double sizeY_world = sizeY_detector;
-	G4double sizeZ_world  = sizeZ_detector;
+	G4double sizeY_world = sizeY_detector + 1*mm;
+	G4double sizeZ_world  = sizeZ_detector + 1*mm;
 
 	G4Material* mat_air = nist->FindOrBuildMaterial("G4_AIR");
 	G4Material* mat_vacuum = new G4Material("Vacuum", 1.e-5*g/cm3, 1, kStateGas, STP_Temperature, 2.e-2*bar);
@@ -88,17 +88,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4double temperature = STP_Temperature + 20*kelvin;
 
 	G4Material* mat_detector;
-	G4Material* nobleGas = ar;
+	G4Material* nobleGas = he;
 	G4Material* quencherGas = c4h10;
 	G4double noblePart = 80*perCent;
 	G4double quencherPart = 1 - noblePart;
 
-	G4ThreeVector pos_detector((sizeX_world-sizeX_detector)/2., 0., 0.);
+	G4ThreeVector pos_detector = G4ThreeVector((sizeX_world-sizeX_detector)/2., 0., 0.);
 	G4double composition_density = (nobleGas->GetDensity()*noblePart + quencherGas->GetDensity()*quencherPart);
 	G4Material* gas_composition = new G4Material("GasComposition", composition_density, 2, kStateGas, temperature, pressure);
 	gas_composition->AddMaterial(nobleGas, noblePart);
 	gas_composition->AddMaterial(quencherGas, quencherPart);
 	mat_detector = gas_composition;
+	G4cout << "\n========== Gas density = " << mat_detector->GetDensity() / (g/cm3) << " g/cm3 ==========" << G4endl;
+	G4cout << "\n========== World position = " << fPhysWorld->GetObjectTranslation() / mm << " mm ==========" << G4endl;
+	G4cout << "\n========== Detector position = " << pos_detector / mm << " mm ==========" << G4endl;
 
 	solid_detector = new G4Box("Detector", .5*sizeX_detector, .5*sizeY_detector, .5*sizeZ_detector);
 	fLogicDetector = new G4LogicalVolume(solid_detector, mat_detector, "Detector");

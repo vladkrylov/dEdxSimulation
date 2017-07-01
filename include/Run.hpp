@@ -21,6 +21,7 @@ class Run : public G4Run {
 
 	private:
 		std::map<G4String, std::map<G4String,G4int> > fProcCounter;
+		int totalHitCounter;
 };
 
 #endif

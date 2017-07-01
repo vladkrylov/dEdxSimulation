@@ -25,6 +25,7 @@ class OutputManager {
 
 		void FillHit(G4Track*);
 		void FillEvent();
+		void StartNewEvent();
 
 	private:
 		TFile*   fRootFile;
@@ -39,6 +40,8 @@ class OutputManager {
 		std::vector<G4double> fTrackLength;
 		std::vector<G4double> fPx, fPy, fPz;
 		std::vector<G4double> fPosX, fPosY, fPosZ;
+
+		int totalHitCounter;
 };
 
 #endif

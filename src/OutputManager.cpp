@@ -27,6 +27,7 @@ fRootFile(0)
 , fPosX(0)
 , fPosY(0)
 , fPosZ(0)
+, totalHitCounter(0)
 { }
 
 OutputManager::~OutputManager() {
@@ -68,8 +69,31 @@ void OutputManager::Save() {
 	}
 }
 
+void OutputManager::StartNewEvent()
+{
+	fPhiVertex.clear();
+	fPhi.clear();
+	fThetaVertex.clear();
+	fTheta.clear();
+	fPx.clear();
+	fPy.clear();
+	fPz.clear();
+	fPosX.clear();
+	fPosY.clear();
+	fPosZ.clear();
+	fT.clear();
+	fEkinVertex.clear();
+	fEkin.clear();
+	fEloss.clear();
+
+	fZVertex.clear();
+	fTrackLength.clear();
+}
+
 void OutputManager::FillHit(G4Track* track)
 {
+	totalHitCounter++;
+
 	G4ThreeVector pos = track->GetPosition();
 	G4ThreeVector dirVertex = track->GetVertexMomentumDirection();
 	G4ThreeVector dir = track->GetMomentumDirection();
@@ -103,5 +127,6 @@ void OutputManager::PrintStatistic() {
 	G4cout << "--- Tree Stats" << G4endl;
 	// TODO replace GetEntries to vector total
 	if(fDetectorTree) G4cout << " N_detector = " << fDetectorTree->GetEntries() << G4endl;
+	G4cout << "\nTotal number of hits = " << totalHitCounter << G4endl;
 	G4cout << "---" << G4endl;
 }

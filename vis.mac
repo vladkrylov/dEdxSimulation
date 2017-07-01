@@ -89,5 +89,5 @@
 # /vis/viewer/set/explodeFactor 1 0 0 0 mm
 # /vis/viewer/set/lineSegmentsPerCircle 24
 
-/run/beamOn 1
+/run/beamOn 500
 

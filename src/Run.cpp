@@ -3,7 +3,10 @@
 #include "G4VProcess.hh"
 #include <iomanip>
 
-Run::Run() : G4Run() {} 
+Run::Run() : G4Run()
+{
+	totalHitCounter = 0;
+}
 
 Run::~Run() {} 
 
@@ -16,9 +19,12 @@ void Run::CountProcesses(const G4String part, const G4VProcess* proc)  {
 	std::map<G4String,G4int>::iterator it = fProcCounter[part].find(procName);
 	if (it == fProcCounter[part].end()) fProcCounter[part][procName] = 1;
 	else fProcCounter[part][procName]++;
+
+	totalHitCounter++;
 }
 
 void Run::EndOfRun() {
+	G4cout << "\nTotal number of hits = " << totalHitCounter << G4endl;
 	G4cout << "\nProcess calls frequency :" << G4endl;
 
 	std::map<G4String, std::map<G4String,G4int> >::iterator part_it;

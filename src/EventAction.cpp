@@ -11,7 +11,10 @@ G4UserEventAction()
 
 EventAction::~EventAction() {}
 
-void EventAction::BeginOfEventAction(const G4Event*) {}
+void EventAction::BeginOfEventAction(const G4Event*)
+{
+	fOutputManager->StartNewEvent();
+}
 
 void EventAction::EndOfEventAction(const G4Event*)
 {
