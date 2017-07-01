@@ -34,9 +34,7 @@ OutputManager::~OutputManager() {
 }
 
 void OutputManager::Initialize() {
-	//[[[cog from MMconfig import *; import os; cog.outl("G4String fileName = \"{}\";".format(conf["photoconversion"]["out_filename"])) ]]]
 	G4String fileName = "photoconversion.root";
-	//[[[end]]]
 	fRootFile = new TFile(fileName, "RECREATE");
 
 	if(!fRootFile) {
@@ -45,19 +43,19 @@ void OutputManager::Initialize() {
 	}
 
 	fDetectorTree = new TTree("detectorTree", "Conversion");
-	fDetectorTree->Branch("phi", &fPhi, "phi/D"); // phi angle
-	fDetectorTree->Branch("theta", &fTheta, "theta/D"); // theta angle to z axis
-	fDetectorTree->Branch("EkinVertex", &fEkinVertex, "EkinVertex/D");
-	fDetectorTree->Branch("Ekin", &fEkin, "Ekin/D"); // kinetic energy
-	fDetectorTree->Branch("ZVertex", &fZVertex, "ZVertex/D"); // z value of the vertex position (track creation point)
-	fDetectorTree->Branch("TrackLength", &fTrackLength, "TrackLengh/D");
-	fDetectorTree->Branch("PosX", &fPosX, "PosX/D"); // x position
-	fDetectorTree->Branch("PosY", &fPosY, "PosY/D"); // y position
-	fDetectorTree->Branch("PosZ", &fPosZ, "PosZ/D"); // z position
-	fDetectorTree->Branch("Px", &fPx, "Px/D"); // x momentum
-	fDetectorTree->Branch("Py", &fPy, "Py/D"); // y momentum
-	fDetectorTree->Branch("Pz", &fPz, "Pz/D"); // z momentum
-	fDetectorTree->Branch("t", &fT, "t/D"); // time
+	fDetectorTree->Branch("phi", &fPhi); // phi angle
+	fDetectorTree->Branch("theta", &fTheta); // theta angle to z axis
+	fDetectorTree->Branch("EkinVertex", &fEkinVertex);
+	fDetectorTree->Branch("Ekin", &fEkin); // kinetic energy
+	fDetectorTree->Branch("ZVertex", &fZVertex); // z value of the vertex position (track creation point)
+	fDetectorTree->Branch("TrackLength", &fTrackLength);
+	fDetectorTree->Branch("PosX", &fPosX); // x position
+	fDetectorTree->Branch("PosY", &fPosY); // y position
+	fDetectorTree->Branch("PosZ", &fPosZ); // z position
+	fDetectorTree->Branch("Px", &fPx); // x momentum
+	fDetectorTree->Branch("Py", &fPy); // y momentum
+	fDetectorTree->Branch("Pz", &fPz); // z momentum
+	fDetectorTree->Branch("t", &fT); // time
 
 	G4cout << "\n----> Output file is: " << fileName << G4endl;
 }
@@ -103,6 +101,7 @@ void OutputManager::FillEvent()
 
 void OutputManager::PrintStatistic() {
 	G4cout << "--- Tree Stats" << G4endl;
+	// TODO replace GetEntries to vector total
 	if(fDetectorTree) G4cout << " N_detector = " << fDetectorTree->GetEntries() << G4endl;
 	G4cout << "---" << G4endl;
 }
