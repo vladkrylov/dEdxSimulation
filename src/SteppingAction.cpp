@@ -12,7 +12,11 @@
 #include "G4LogicalVolume.hh"
 #include "G4SystemOfUnits.hh"
 
-SteppingAction::SteppingAction(EventAction* eventAction, DetectorConstruction* detector, OutputManager* outManager) : G4UserSteppingAction(), fEventAction(eventAction), fDetector(detector), fOutputManager(outManager) {}
+SteppingAction::SteppingAction(EventAction* eventAction, DetectorConstruction* detector, OutputManager* outManager) :
+G4UserSteppingAction(),
+fEventAction(eventAction),
+fDetector(detector),
+fOutputManager(outManager) {}
 
 SteppingAction::~SteppingAction() {}
 
@@ -32,19 +36,9 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
 		if (track->GetCurrentStepNumber() == 1) { // creation
 			if (track->GetParentID() == 1) { // only secondaries
 				if (particle->GetParticleType() == "lepton") { // only electrons
-					fOutputManager->FillEvent(fOutputManager->GetDetectorTree(), track);
+					fOutputManager->FillHit(track);
 					track->SetTrackStatus(fStopAndKill); // kill track
 					run->CountProcesses("gas", track->GetCreatorProcess());
-				}
-			}
-		}
-	} else if (preVolume == shieldVolume) {
-		if (track->GetCurrentStepNumber() == 1) {
-			if (track->GetParentID() == 1) {
-				if (particle->GetParticleType() == "lepton") {
-					fOutputManager->FillEvent(fOutputManager->GetShieldTree(), track);
-					track->SetTrackStatus(fStopAndKill);
-					run->CountProcesses("shield", track->GetCreatorProcess());
 				}
 			}
 		}

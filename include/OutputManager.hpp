@@ -1,6 +1,8 @@
 #ifndef OutputManager_h
 #define OutputManager_h 1
 
+#include <vector>
+
 #include "G4Track.hh"
 #include "G4ThreeVector.hh"
 #include "globals.hh"
@@ -19,26 +21,24 @@ class OutputManager {
 		void Initialize();
 		void Save();
 		void PrintStatistic();
-		TTree* GetShieldTree() { return fShieldTree; }
 		TTree* GetDetectorTree() { return fDetectorTree; }
 
-		void FillEvent(TTree*, G4Track*);
+		void FillHit(G4Track*);
+		void FillEvent();
 
 	private:
 		TFile*   fRootFile;
-
-		TTree*   fShieldTree;
 		TTree*   fDetectorTree;
 
-		G4double fPhiVertex, fPhi;
-		G4double fThetaVertex, fTheta;
-		G4double fT;
-		G4double fEkinVertex, fEkin;
-		G4double fEloss;
-		G4double fZVertex;
-		G4double fTrackLength;
-		G4double fPx, fPy, fPz;
-		G4double fPosX, fPosY, fPosZ;
+		std::vector<G4double> fPhiVertex, fPhi;
+		std::vector<G4double> fThetaVertex, fTheta;
+		std::vector<G4double> fT;
+		std::vector<G4double> fEkinVertex, fEkin;
+		std::vector<G4double> fEloss;
+		std::vector<G4double> fZVertex;
+		std::vector<G4double> fTrackLength;
+		std::vector<G4double> fPx, fPy, fPz;
+		std::vector<G4double> fPosX, fPosY, fPosZ;
 };
 
 #endif
