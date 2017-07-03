@@ -23,58 +23,64 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file electromagnetic/TestEm8/include/PhysicsList.hh
-/// \brief Definition of the PhysicsList class
+/// \file electromagnetic/TestEm8/include/PhysicsListMessenger.hh
+/// \brief Definition of the PhysicsListMessenger class
 //
-// $Id: PhysicsList.hh 92047 2015-08-14 07:23:37Z gcosmo $
+//
+// $Id: PhysicsListMessenger.hh 92047 2015-08-14 07:23:37Z gcosmo $
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   PhysicsList
+// ClassName:   PhysicsListMessenger
 //
 // Description: EM physics with a possibility to add PAI model
 //
 // Author:      V.Ivanchenko 01.09.2010
 //
 //----------------------------------------------------------------------------
-//
+// 
 
-#ifndef PhysicsList_h
-#define PhysicsList_h 1
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "G4VModularPhysicsList.hh"
+#ifndef PhysicsListMessenger_h
+#define PhysicsListMessenger_h 1
+
 #include "globals.hh"
+#include "G4UImessenger.hh"
 
-class G4VPhysicsConstructor;
-class PhysicsListMessenger;
-class StepMax;
+class PhysicsList;
+class G4UIdirectory;
+class G4UIcmdWithADoubleAndUnit;
+class G4UIcmdWithADouble;
+class G4UIcmdWithAString;
+class G4UIcmdWithAnInteger;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class PhysicsList: public G4VModularPhysicsList
+class PhysicsListMessenger: public G4UImessenger
 {
 public:
-
-  PhysicsList();
-  virtual ~PhysicsList();
-
-  virtual void ConstructParticle();
+  
+  PhysicsListMessenger(PhysicsList* );
+  virtual ~PhysicsListMessenger();
     
-  virtual void SetCuts();
-        
-  void AddPhysicsList(const G4String& name);
-  virtual void ConstructProcess();
+  virtual void SetNewValue(G4UIcommand*, G4String);
     
-  void AddStepMax(); 
-
 private:
+  
+  PhysicsList* fPhysicsList;
 
-  G4VPhysicsConstructor*  fEmPhysicsList;
-  G4VPhysicsConstructor*  fDecayPhysicsList;
-  G4String fEmName;
+  G4UIdirectory*             fPhysDir;           
+  G4UIcmdWithADoubleAndUnit* fECmd;
+  G4UIcmdWithAnInteger*      fEBCmd;
+  G4UIcmdWithAnInteger*      fCBCmd;
+  G4UIcmdWithAnInteger*      fCMCmd;
+  G4UIcmdWithAString*        fListCmd;
+  G4UIcmdWithADoubleAndUnit* fADCCmd;
+  G4UIcmdWithADouble*        fNorCmd;
+  G4UIcmdWithADouble*        fSmCmd;
     
-  PhysicsListMessenger* fMessenger;
-  static G4ThreadLocal StepMax* fStepMaxProcess;  
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
