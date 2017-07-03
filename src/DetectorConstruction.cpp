@@ -66,7 +66,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4bool checkOverlaps = true;
 
 	// Detector
-	G4double sizeX_detector = 65.*mm;
+	G4double sizeX_detector = 1.4*4*cm;
 	G4double sizeY_detector = 80.*mm;
 	G4double sizeZ_detector = 17.*mm;
 
