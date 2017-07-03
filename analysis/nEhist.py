@@ -24,7 +24,7 @@ def plot_event(tfile, evid):
 #             print("%f\t%f" % (PosX[i], PosY[i]))
 
     c1 = r.TCanvas("Event%d" % evid, "canvas", 50, 50, 900, 600)
-    nE_max = 15
+    nE_max = 1000
     h = r.TH1I("NElectrons", "NElectrons", nE_max, 0, nE_max)
     n_points = 0
     
@@ -34,6 +34,9 @@ def plot_event(tfile, evid):
         n_hits = PosX.size()
         h.Fill(n_hits)
     
+    print h.FindLastBinAbove(0)
+    nE_max = h.GetXaxis().GetBinCenter(h.FindLastBinAbove(0)) + 1.5
+    h.SetBins(int(nE_max), 0, nE_max)
     h.Draw()
     h.SetTitle("")
     h.SetLineWidth(2)

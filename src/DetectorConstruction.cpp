@@ -100,8 +100,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	gas_composition->AddMaterial(quencherGas, quencherPart);
 	mat_detector = gas_composition;
 	G4cout << "\n========== Gas density = " << mat_detector->GetDensity() / (g/cm3) << " g/cm3 ==========" << G4endl;
-	G4cout << "\n========== World position = " << fPhysWorld->GetObjectTranslation() / mm << " mm ==========" << G4endl;
-	G4cout << "\n========== Detector position = " << pos_detector / mm << " mm ==========" << G4endl;
 
 	solid_detector = new G4Box("Detector", .5*sizeX_detector, .5*sizeY_detector, .5*sizeZ_detector);
 	fLogicDetector = new G4LogicalVolume(solid_detector, mat_detector, "Detector");
