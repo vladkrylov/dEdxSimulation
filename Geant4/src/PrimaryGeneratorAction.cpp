@@ -38,7 +38,6 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 	fParticleGun->SetParticlePosition(fDetector->GetSourcePosition());
-	G4cout << "=============== " << fDetector->GetSourcePosition()<< " ===============" << G4endl;
 	fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 

@@ -22,7 +22,5 @@
 /vis/scene/add/scale 1 cm  # Simple scale line
 /vis/geometry/set/visibility World 0 false
 
-/testem/phys/addPhysics pai
-
 /run/beamOn 500
 

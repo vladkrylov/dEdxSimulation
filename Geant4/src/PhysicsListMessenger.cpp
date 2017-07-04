@@ -60,37 +60,10 @@ PhysicsListMessenger::PhysicsListMessenger(PhysicsList* pPhys)
  fListCmd(0),
  fADCCmd(0)
 {   
-  fECmd = new G4UIcmdWithADoubleAndUnit("/testem/phys/setMaxE",this);  
-  fECmd->SetGuidance("Set max energy deposit");
-  fECmd->SetParameterName("Emax",false);
-  fECmd->SetUnitCategory("Energy");
-  fECmd->SetRange("Emax>0.0");
-  fECmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-
-  fEBCmd = new G4UIcmdWithAnInteger("/testem/phys/setNbinsE",this);  
-  fEBCmd->SetGuidance("Set number of bins in energy.");
-  fEBCmd->SetParameterName("Ebins",false);
-  fEBCmd->SetRange("Ebins>0");
-  fEBCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-  
-  fCBCmd = new G4UIcmdWithAnInteger("/testem/phys/setNbinsCl",this);  
-  fCBCmd->SetGuidance("Set max number of clusters.");
-  fCBCmd->SetParameterName("Cbins",false);
-  fCBCmd->SetRange("Cbins>0");
-  fCBCmd->AvailableForStates(G4State_PreInit,G4State_Idle);  
-
   fListCmd = new G4UIcmdWithAString("/testem/phys/addPhysics",this);  
   fListCmd->SetGuidance("Add modula physics list.");
   fListCmd->SetParameterName("PList",false);
   fListCmd->AvailableForStates(G4State_PreInit);  
-
-  fADCCmd = new G4UIcmdWithADoubleAndUnit("/testem/setEnergyPerChannel",this);
-  fADCCmd->SetGuidance("Set energy per ADC channel");
-  fADCCmd->SetParameterName("enadc",false,false);
-  fADCCmd->SetUnitCategory("Energy");
-  fADCCmd->SetDefaultUnit("keV");
-  fADCCmd->SetRange("enadc>0.");
-  fADCCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -120,7 +93,9 @@ void PhysicsListMessenger::SetNewValue(G4UIcommand* command,
 //   { man->SetNumberBinsCluster(fCBCmd->GetNewIntValue(newValue)); }
 
   if( command == fListCmd )
-   { fPhysicsList->AddPhysicsList(newValue); }
+  {
+	  fPhysicsList->AddPhysicsList(newValue);
+  }
 
 //  if( command == fADCCmd )
 //    { man->SetEnergyPerChannel(fADCCmd->GetNewDoubleValue(newValue)); }

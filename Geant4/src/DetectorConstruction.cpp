@@ -12,6 +12,7 @@
 #include "G4VisAttributes.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4ProductionCuts.hh"
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
@@ -107,6 +108,22 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	visatt_detector->SetForceWireframe(true);
 	fLogicDetector->SetVisAttributes(visatt_detector);
 	fPhysDetector = new G4PVPlacement(0, pos_detector, fLogicDetector, "Detector", fLogicWorld, false, 0, checkOverlaps);
+
+	// defined gas detector region
+	G4double cut = sizeX_detector;
+	G4ProductionCuts* fGasDetectorCuts   = new G4ProductionCuts();
+	fGasDetectorCuts->SetProductionCut(cut,"gamma");
+	fGasDetectorCuts->SetProductionCut(cut,"e-");
+	fGasDetectorCuts->SetProductionCut(cut,"e+");
+	fGasDetectorCuts->SetProductionCut(cut,"proton");
+
+	G4Region* fRegGasDet = new G4Region("GasDetector");
+	fRegGasDet->SetProductionCuts(fGasDetectorCuts);
+	fRegGasDet->AddRootLogicalVolume(fLogicDetector);
+
+	if(0.0 == mat_detector->GetIonisation()->GetMeanEnergyPerIonPair()) {
+		SetPairEnergy(20*eV);
+	}
 
 	return fPhysWorld;
 }

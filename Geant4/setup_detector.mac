@@ -1,5 +1,10 @@
 # Change simulation parameters
 # /MM/maxStep 1 cm
+
+/testem/phys/addPhysics  emstandard_opt0
+/testem/phys/addPhysics pai
+/process/em/AddPAIRegion all GasDetector pai
+
 /run/setCut 2 um
 
 # Random seeds
