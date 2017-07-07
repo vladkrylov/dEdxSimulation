@@ -34,6 +34,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
 		G4LogicalVolume*   	fLogicCathode;
 		G4LogicalVolume*   	fLogicDetector;
 		G4Box*				solid_detector;
+		G4Material*         fGasMat;
 };
 
 #endif

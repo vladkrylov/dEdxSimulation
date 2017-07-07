@@ -88,26 +88,32 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4double pressure = 1.*bar;
 	G4double temperature = STP_Temperature + 20*kelvin;
 
-	G4Material* mat_detector;
 	G4Material* nobleGas = he;
 	G4Material* quencherGas = c4h10;
 	G4double noblePart = 80*perCent;
 	G4double quencherPart = 1 - noblePart;
 
+	G4double Mn = nobleGas->GetMassOfMolecule();
+	G4double Mq = quencherGas->GetMassOfMolecule();
+	G4double nobleMassFrac = noblePart*Mn / (noblePart*Mn + quencherPart*Mq);
+	G4double quencherMassFrac = 1 - nobleMassFrac;
+	G4cout << "\n========== m_He = " << nobleMassFrac << "; m_iB = " << quencherMassFrac << " ==========" << G4endl;
+
+
 	G4ThreeVector pos_detector = G4ThreeVector((sizeX_world-sizeX_detector)/2., 0., 0.);
 	G4double composition_density = (nobleGas->GetDensity()*noblePart + quencherGas->GetDensity()*quencherPart);
 	G4Material* gas_composition = new G4Material("GasComposition", composition_density, 2, kStateGas, temperature, pressure);
-	gas_composition->AddMaterial(nobleGas, noblePart);
-	gas_composition->AddMaterial(quencherGas, quencherPart);
-	mat_detector = gas_composition;
-	G4cout << "\n========== Gas density = " << mat_detector->GetDensity() / (g/cm3) << " g/cm3 ==========" << G4endl;
+	gas_composition->AddMaterial(nobleGas, nobleMassFrac);
+	gas_composition->AddMaterial(quencherGas, quencherMassFrac);
+	fGasMat = gas_composition;
+	G4cout << "\n========== Gas density = " << fGasMat->GetDensity() / (g/cm3) << " g/cm3 ==========" << G4endl;
 
-	solid_detector = new G4Box("Detector", .5*sizeX_detector, .5*sizeY_detector, .5*sizeZ_detector);
-	fLogicDetector = new G4LogicalVolume(solid_detector, mat_detector, "Detector");
+	solid_detector = new G4Box("GasDetector", .5*sizeX_detector, .5*sizeY_detector, .5*sizeZ_detector);
+	fLogicDetector = new G4LogicalVolume(solid_detector, fGasMat, "GasDetector");
 	G4VisAttributes* visatt_detector = new G4VisAttributes(G4Colour(1., 1., 1.));
 	visatt_detector->SetForceWireframe(true);
 	fLogicDetector->SetVisAttributes(visatt_detector);
-	fPhysDetector = new G4PVPlacement(0, pos_detector, fLogicDetector, "Detector", fLogicWorld, false, 0, checkOverlaps);
+	fPhysDetector = new G4PVPlacement(0, pos_detector, fLogicDetector, "GasDetector", fLogicWorld, false, 0, checkOverlaps);
 
 	// defined gas detector region
 	G4double cut = sizeX_detector;
@@ -121,7 +127,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	fRegGasDet->SetProductionCuts(fGasDetectorCuts);
 	fRegGasDet->AddRootLogicalVolume(fLogicDetector);
 
-	if(0.0 == mat_detector->GetIonisation()->GetMeanEnergyPerIonPair()) {
+	if(0.0 == fGasMat->GetIonisation()->GetMeanEnergyPerIonPair()) {
 		SetPairEnergy(20*eV);
 	}
 
@@ -130,7 +136,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 void DetectorConstruction::SetPairEnergy(G4double val)
 {
-  // if(val > 0.0) fCoatingMaterial->GetIonisation()->SetMeanEnergyPerIonPair(val);
+//   if(val > 0.0) fCoatingMaterial->GetIonisation()->SetMeanEnergyPerIonPair(val);
+   if(val > 0.0) fGasMat->GetIonisation()->SetMeanEnergyPerIonPair(val);
 }
 
 G4ThreeVector DetectorConstruction::GetSourcePosition()
