@@ -325,8 +325,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // visualisation
   fLogicWorld->SetVisAttributes(G4VisAttributes::Invisible);
-  G4VisAttributes* color1 = new G4VisAttributes(G4Colour(0.3, 0.3, 0.3));
-  fLogicWind->SetVisAttributes(color1);
+//  G4VisAttributes* color1 = new G4VisAttributes(G4Colour(0.3, 0.3, 0.3));
+//  fLogicWind->SetVisAttributes(color1);
   G4VisAttributes* color2 = new G4VisAttributes(G4Colour(0.0, 0.3, 0.7));
   fLogicDet->SetVisAttributes(color2);
 
