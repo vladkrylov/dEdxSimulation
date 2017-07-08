@@ -79,7 +79,7 @@ DetectorConstruction::DetectorConstruction(PrimaryGeneratorAction* p)
     fDetectorMessenger(0), fTargetSD(0), fGasDetectorCuts(0),
     fRegGasDet(0), fPrimaryGenerator(p)
 {
-  fGasThickness = 23.0*mm;
+  fGasThickness = 14.*mm*4;
   fGasRadius    = 10.*cm;
 
   fWindowThick  = 51.0*micrometer;
@@ -88,7 +88,7 @@ DetectorConstruction::DetectorConstruction(PrimaryGeneratorAction* p)
 
   fDetectorMessenger = new DetectorMessenger(this);
 
-  G4double cut = 23.*mm;
+  G4double cut = fGasThickness;
   fGasDetectorCuts   = new G4ProductionCuts();
   fGasDetectorCuts->SetProductionCut(cut,"gamma");
   fGasDetectorCuts->SetProductionCut(cut,"e-");
