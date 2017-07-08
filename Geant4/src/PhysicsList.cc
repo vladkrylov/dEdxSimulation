@@ -42,8 +42,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "PhysicsList.hpp"
-#include "PhysicsListMessenger.hpp"
+#include "PhysicsList.hh"
+#include "PhysicsListMessenger.hh"
 
 #include "G4EmStandardPhysics.hh"
 #include "G4EmStandardPhysics_option1.hh"
@@ -67,7 +67,7 @@
 #include "G4LossTableManager.hh"
 #include "G4ProductionCutsTable.hh"
 
-#include "StepMax.hpp"
+#include "StepMax.hh"
 
 #include "G4ProcessManager.hh"
 #include "G4ParticleTypes.hh"
@@ -222,7 +222,7 @@ void PhysicsList::AddStepMax()
 
 void PhysicsList::SetCuts()
 {
-  G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(100.*eV,100.*MeV);
+  G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(100.*eV,1e5);
   if ( verboseLevel > 0 )
   {
     G4cout << "PhysicsList::SetCuts:";

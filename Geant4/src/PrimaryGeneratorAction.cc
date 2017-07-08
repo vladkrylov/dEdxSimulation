@@ -23,76 +23,69 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file electromagnetic/TestEm8/src/StepMax.cc
-/// \brief Implementation of the StepMax class
+/// \file electromagnetic/TestEm8/src/PrimaryGeneratorAction.cc
+/// \brief Implementation of the PrimaryGeneratorAction class
 //
-// $Id: StepMax.cc 67268 2013-02-13 11:38:40Z ihrivnac $
+// $Id: PrimaryGeneratorAction.cc 67268 2013-02-13 11:38:40Z ihrivnac $
 //
+/////////////////////////////////////////////////////////////////////////
+//
+// TestEm8: Gaseous detector
+//
+// Created: 31.08.2010 V.Ivanchenko
+//
+// Modified:
+//
+////////////////////////////////////////////////////////////////////////
+//
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "StepMax.hpp"
-#include "StepMaxMessenger.hpp"
-#include "G4VPhysicalVolume.hh"
+#include "PrimaryGeneratorAction.hh"
+#include "G4Event.hh"
+#include "G4Electron.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-StepMax::StepMax(const G4String& processName)
-  : G4VDiscreteProcess(processName),
-    fMaxChargedStep(DBL_MAX),
-    fMessenger(0)
+PrimaryGeneratorAction::PrimaryGeneratorAction()
+ : G4VUserPrimaryGeneratorAction(),
+   fParticleGun(0)
 {
-  fMessenger = new StepMaxMessenger(this);
+  fParticleGun  = new G4ParticleGun(1);
+  fParticleGun->SetParticleDefinition(G4Electron::Electron());
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+  fParticleGun->SetParticleEnergy(1.*GeV);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-StepMax::~StepMax() 
-{ 
-  delete fMessenger; 
+PrimaryGeneratorAction::~PrimaryGeneratorAction()
+{
+  delete fParticleGun;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool StepMax::IsApplicable(const G4ParticleDefinition& particle)
+void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-  return (particle.GetPDGCharge() != 0.);
+  if(0 == anEvent->GetEventID()) {
+    G4cout << "### PrimaryGeneratorAction::GeneratePrimaries ##########" << G4endl;
+    G4cout << "### " << fParticleGun->GetParticleDefinition()->GetParticleName()
+           << "  E(MeV)= " << fParticleGun->GetParticleEnergy()/MeV << G4endl;
+    G4cout << "########################################################"
+           << G4endl;
+
+  }
+  fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void StepMax::SetMaxStep(G4double step) 
+void PrimaryGeneratorAction::SetPositionZ(G4double z)
 {
-  fMaxChargedStep = step;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-G4double 
-StepMax::PostStepGetPhysicalInteractionLength(const G4Track&,
-                                              G4double,
-                                              G4ForceCondition* condition)
-{
-  // condition is set to "Not Forced"
-  *condition = NotForced;
-  fProposedStep = fMaxChargedStep;
-
-  return fProposedStep;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-G4VParticleChange* StepMax::PostStepDoIt(const G4Track& aTrack, const G4Step&)
-{
-  aParticleChange.Initialize(aTrack);
-  return &aParticleChange;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-G4double StepMax::GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*)
-{
-  return 0.;
+  fParticleGun->SetParticlePosition(G4ThreeVector(0.,0.,z));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
