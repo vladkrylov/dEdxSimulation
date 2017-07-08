@@ -53,11 +53,16 @@
 #include "G4DataVector.hh"
 #include "G4StatDouble.hh"
 
+#include <TTree.h>
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 class Histo;
 class G4Step;
 class G4ElectronIonPair;
+
+class TFile;
+class TH1D;
 
 class HistoManager
 {
@@ -81,6 +86,7 @@ public: // Without description
   void BeginOfEvent();
   void EndOfEvent();
 
+  void InitializeROOT();
   void AddEnergy(G4double edep, const G4Step*);
 
   inline void SetMaxEnergy(G4double value);
@@ -124,6 +130,12 @@ private:
 
   Histo*   fHisto;
   G4ElectronIonPair* fElIonPair;
+
+  // ROOT
+  G4double fTotEdepROOT;
+  G4double fMeanClusterROOT;
+  TFile*   fRootFile;
+  TTree*   fDetectorTree;
 };
 
 inline void HistoManager::SetMaxEnergy(G4double value)
