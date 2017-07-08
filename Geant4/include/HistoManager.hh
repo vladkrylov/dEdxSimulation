@@ -132,6 +132,8 @@ private:
   G4ElectronIonPair* fElIonPair;
 
   // ROOT
+  G4double fTotEdepROOT;
+  G4double fMeanClusterROOT;
   TFile*   fRootFile;
   TTree*   fDetectorTree;
 };

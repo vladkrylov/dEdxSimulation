@@ -258,7 +258,11 @@ void HistoManager::EndOfEvent()
 
   fEdep.fill(fTotEdep, 1.0);
 
-  if (fDetectorTree) fDetectorTree->Fill();
+  if (fDetectorTree) {
+	  fTotEdepROOT = fTotEdep/keV;
+	  fMeanClusterROOT = fMeanCluster;
+	  fDetectorTree->Fill();
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -291,6 +295,6 @@ void HistoManager::InitializeROOT()
 	}
 
 	fDetectorTree = new TTree("GasDetector", "Conversion");
-	fDetectorTree->Branch("EDep", &fTotEdep);
-	fDetectorTree->Branch("nPrimElec", &fMeanCluster);
+	fDetectorTree->Branch("EDep", &fTotEdepROOT);
+	fDetectorTree->Branch("nPrimElec", &fMeanClusterROOT);
 }
