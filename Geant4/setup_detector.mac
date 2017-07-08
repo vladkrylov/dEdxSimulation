@@ -1,5 +1,5 @@
 # Change simulation parameters
-# /MM/maxStep 1 cm
+/MM/maxStep 1 cm
 
 /testem/phys/addPhysics  emstandard_opt4
 /testem/phys/addPhysics pai

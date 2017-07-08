@@ -136,7 +136,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 void DetectorConstruction::SetPairEnergy(G4double val)
 {
-//   if(val > 0.0) fCoatingMaterial->GetIonisation()->SetMeanEnergyPerIonPair(val);
    if(val > 0.0) fGasMat->GetIonisation()->SetMeanEnergyPerIonPair(val);
 }
 

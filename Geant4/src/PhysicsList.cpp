@@ -222,7 +222,7 @@ void PhysicsList::AddStepMax()
 
 void PhysicsList::SetCuts()
 {
-  G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(100.*eV,1e5);
+  G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(100.*eV,100.*MeV);
   if ( verboseLevel > 0 )
   {
     G4cout << "PhysicsList::SetCuts:";
