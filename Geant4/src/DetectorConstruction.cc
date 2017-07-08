@@ -293,15 +293,15 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                  false,                   //no boolean operation
                                  0);                      //copy number
 
-  // Window
-  G4Tubs* wind = new G4Tubs("Absorber",                
-                            0.,contR,contThick/2.,0.,CLHEP::twopi); 
-
-  fLogicWind = new G4LogicalVolume(wind, fWindowMat, "Window"); 
-
-  G4PVPlacement* PhysWind = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.),
-                                          "Window",  fLogicWind,
-					  fPhysWorld, false, 0);
+//  // Window
+//  G4Tubs* wind = new G4Tubs("Absorber",
+//                            0.,contR,contThick/2.,0.,CLHEP::twopi);
+//
+//  fLogicWind = new G4LogicalVolume(wind, fWindowMat, "Window");
+//
+//  G4PVPlacement* PhysWind = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.),
+//                                          "Window",  fLogicWind,
+//					  fPhysWorld, false, 0);
                                         
   // Detector volume
   G4Tubs* det = new G4Tubs("Gas", 0., fGasRadius, fGasThickness/2.,
@@ -309,8 +309,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   fLogicDet = new G4LogicalVolume(det, fGasMat, "Gas"); 
 
-  new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), "Gas", fLogicDet, PhysWind,
-                                                       false, 0);
+//  fPhysDetector = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), "Gas", fLogicDet, PhysWind, false, 0);
+  fPhysDetector = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), "Gas", fLogicDet, fPhysWorld, false, 0);
 
   fRegGasDet->AddRootLogicalVolume(fLogicDet);
 

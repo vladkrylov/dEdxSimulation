@@ -90,6 +90,7 @@ private:
   G4LogicalVolume*   fLogicWorld;
   G4LogicalVolume*   fLogicWind;
   G4LogicalVolume*   fLogicDet;
+  G4VPhysicalVolume* fPhysDetector;
 
   DetectorMessenger* fDetectorMessenger;  
   TargetSD*          fTargetSD;
