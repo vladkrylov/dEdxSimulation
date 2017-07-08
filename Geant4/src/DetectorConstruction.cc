@@ -128,6 +128,7 @@ void DetectorConstruction::DefineMaterials()
   //
   // simple gases at STP conditions 
   //
+  G4Material* He     = manager->FindOrBuildMaterial("G4_He");
   G4Material* Argon = manager->FindOrBuildMaterial("G4_Ar");
   G4Material* Kr = manager->FindOrBuildMaterial("G4_Kr");
   G4Material* Xe     = manager->FindOrBuildMaterial("G4_Xe");
@@ -221,8 +222,20 @@ void DetectorConstruction::DefineMaterials()
   NeCO2->AddElement( elNe, fractionmass = 0.8039 ) ;
   NeCO2->AddElement( elO,  fractionmass = 0.1426 ) ;
   NeCO2->AddElement( elC,  fractionmass = 0.0535 ) ;
-   
-  fGasMat = XeCH4C3H8;
+
+  // C4H10 - iso-Butane
+  G4Material* IsoBut = new G4Material("isoC4H10", 2.67*kg/m3, 2);
+  IsoBut->AddElement(elC, 4);
+  IsoBut->AddElement(elH, 10);
+
+  // 80% He + 20% IsoButane, STP
+  density = 0.645*mg/cm3 ;
+  G4Material* HeIsoBut = new G4Material(name="HeIsoBut"  , density,
+										 ncomponents=2);
+  HeIsoBut->AddMaterial( He,            fractionmass = 0.216 ) ;
+  HeIsoBut->AddMaterial( IsoBut,        fractionmass = 0.784 ) ;
+
+  fGasMat = HeIsoBut;
   fWindowMat = Mylar;
   fWorldMaterial = empty; 
 
