@@ -49,6 +49,9 @@
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
 
+#include <TFile.h>
+#include <TTree.h>
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 HistoManager* HistoManager::fManager = 0;
@@ -66,8 +69,10 @@ HistoManager* HistoManager::GetPointer()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 HistoManager::HistoManager()
- : fHisto(0),
-   fElIonPair(0)
+: fHisto(0)
+, fElIonPair(0)
+, fRootFile(0)
+, fDetectorTree(0)
 {
   fNHisto      = 2;
   fVerbose     = 1;
@@ -102,6 +107,7 @@ HistoManager::HistoManager()
 HistoManager::~HistoManager()
 {
   delete fHisto;
+  if (fRootFile) delete fRootFile;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -114,6 +120,8 @@ void HistoManager::BeginOfRun()
   fTotCluster = 0.0;
   fMeanCluster= 0.0;
   fOverflow   = 0.0;
+
+  InitializeROOT();
 
   if(fHisto->IsActive() && !fHistoBooked) { 
 
@@ -213,6 +221,12 @@ void HistoManager::EndOfRun()
     fHisto->Save();
   }
   G4cout << " ================== run end ==========================" << G4endl;
+
+  if (fRootFile) {
+	fRootFile->Write();
+	fRootFile->Close();
+	G4cout << "\n----> Output Tree is saved \n" << G4endl;
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -243,6 +257,8 @@ void HistoManager::EndOfEvent()
   fHisto->Fill(2,fTotEdep*fFactorALICE/keV,1.0);
 
   fEdep.fill(fTotEdep, 1.0);
+
+  if (fDetectorTree) fDetectorTree->Fill();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -264,3 +280,17 @@ void HistoManager::AddEnergy(G4double edep, const G4Step* step)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
+void HistoManager::InitializeROOT()
+{
+	G4String fileName = "G4EDep.root";
+	fRootFile = new TFile(fileName, "RECREATE");
+
+	if(!fRootFile) {
+		G4cout << "OutputManager::Initialize: Problem creating the ROOT TFile" << G4endl;
+		return;
+	}
+
+	fDetectorTree = new TTree("GasDetector", "Conversion");
+	fDetectorTree->Branch("EDep", &fTotEdep);
+	fDetectorTree->Branch("nPrimElec", &fMeanCluster);
+}
