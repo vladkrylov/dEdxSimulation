@@ -14,6 +14,7 @@
 
 #include <TROOT.h>
 #include <TFile.h>
+#include <TTree.h>
 #include <TH1F.h>
 
 #include <LHit.h>
@@ -36,12 +37,17 @@ private:
 	bool fGenerated;
 	TFile* savefile;
 	TDirectory* savedir;
+	TTree* detectorTree;
 	int printStep;
 	int nEvents;
 	double energy;
 	std::string primParticle;
 
-	// Geomerty
+	std::vector<double> fPosX, fPosY, fPosZ, fNePerCluster, fdEPerCluster;
+	double fdEPerTrack, fNePerTrack;
+	std::vector<double> fNePerGap, fdEPerGap;
+
+	// Geometry
 	double chamberLength;
 	double dl;  // length of the track intervals for dE/dx calculation
 
