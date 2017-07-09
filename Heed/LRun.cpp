@@ -5,6 +5,7 @@
  *      Author: vlad
  */
 
+#include "SystemOfUnits.h"
 #include "LRun.h"
 
 #include <numeric>
@@ -34,13 +35,14 @@ LRun::LRun( double myEnergy,
 , nEvents(nev)
 , primParticle(particle)
 , dl(gap)
+, detectorTree(0)
 {
 	savefile = 0;
 	savedir = 0;
 
 	chamberLength = 1.4*4;  // cm
 
-	printStep = nev/5;
+	printStep = nev/10;
 	if (printStep == 0) printStep = 1;
 
 	tracks = new std::vector<LTrack*>(nEvents);
@@ -50,11 +52,13 @@ LRun::LRun( double myEnergy,
 LRun::~LRun()
 {
 	delete tracks;
+	delete detectorTree;
 }
 
 void LRun::SetOutFile(TFile& f)
 {
 	savefile = &f;
+	detectorTree = new TTree(GenerateDirName().c_str(), "Heed");
 }
 
 void LRun::Generate()
@@ -111,7 +115,7 @@ void LRun::Generate()
 
 	for (int iEv = 0; iEv < nEvents; ++iEv) {
 //		if (i == 1) track->DisableDebugging();4
-		if (iEv % printStep == 0) std::cout << "Generating: " << iEv << "/" << nEvents << " events\n";
+		if ((iEv+1) % printStep == 0) std::cout << "Generating: " << iEv+1 << "/" << nEvents << " events\n";
 //		// Initial position and direction
 		double x0 = 0., y0 = 0., z0 = 0., t0 = 0.;
 		double dx0 = 1., dy0 = 0., dz0 = 0.;
@@ -151,69 +155,82 @@ void LRun::Analyze()
 		return;
 	}
 
-	savefile->cd();
-	savedir = savefile->GetDirectory(GenerateDirName().c_str());
-	if(!savedir) {
-		savedir = savefile->mkdir(GenerateDirName().c_str());
-	}
-	savedir->cd();
+//	savefile->cd();
+//	savedir = savefile->GetDirectory(GenerateDirName().c_str());
+//	if(!savedir) {
+//		savedir = savefile->mkdir(GenerateDirName().c_str());
+//	}
+//	savedir->cd();
+//	if (detectorTree) delete detectorTree;
+
+	detectorTree->Branch("PosX", &fPosX); // x position
+	detectorTree->Branch("PosY", &fPosY); // y position
+	detectorTree->Branch("PosZ", &fPosZ); // z position
+	detectorTree->Branch("dEPerCluster", &fdEPerCluster);
+	detectorTree->Branch("NePerCluster", &fNePerCluster);
+
+	detectorTree->Branch("dEPerTrack", &fdEPerTrack);
+	detectorTree->Branch("NePerTrack", &fNePerTrack);
+
+	detectorTree->Branch("dEPerGap", &fdEPerGap);
+	detectorTree->Branch("NePerGap", &fNePerGap);
 
 	/**
-	 * Histograms to save
+	 * data to save
 	 */
-	TH1F NePerCluster;
-	NePerCluster.SetName("NePerCluster");
-	NePerCluster.SetBins(2000, 0, 2000);
-
-	TH1F hX;
-	hX.SetName("X");
-	hX.SetBins(300, 0, chamberLength);
-	hX.GetXaxis()->SetTitle("X, cm");
-
-	TH1F hY;
-	hY.SetName("Y");
-	hY.SetBins(300, -20, 20);
-	hY.GetXaxis()->SetTitle("Y, cm");
-
-	TH1F hZ;
-	hZ.SetName("Z");
-	hZ.SetBins(300, -20, 20);
-	hZ.GetXaxis()->SetTitle("Z, cm");
-
-	TH1F dEPerCluster;
-	dEPerCluster.SetName("dEPerCluster");
-	dEPerCluster.SetBins(3000, 0, 7.5e+03*chamberLength);
-	dEPerCluster.GetXaxis()->SetTitle("Cluster deposit energy, eV");
-
-	TH1F dEPerTrack;
-	dEPerTrack.SetName("dEPerTrack");
-	dEPerTrack.SetBins(150, 0, 8.75e3*chamberLength);
-	dEPerTrack.GetXaxis()->SetTitle("Track deposit energy, eV");
-
-	TH1F NePerTrack;
-	NePerTrack.SetName("NePerTrack");
-	NePerTrack.SetBins(150, 0, 2e+02*chamberLength);
-	NePerTrack.GetXaxis()->SetTitle("Track primary electrons");
-
-	TH1F dNePer1mm;
-	dNePer1mm.SetName("dNePerGap");
-	dNePer1mm.SetBins(300, 0, 20);
-	dNePer1mm.GetXaxis()->SetTitle("Primary electrons per gap");
-
-	TH1F dNePer1mmTrunc;
-	dNePer1mmTrunc.SetName("dNePerGapTrunc");
-	dNePer1mmTrunc.SetBins(300, 0, 20);
-	dNePer1mmTrunc.GetXaxis()->SetTitle("Primary electrons per gap, truncated");
-
-	TH1F dEPer1mm;
-	dEPer1mm.SetName("dEPerGap");
-	dEPer1mm.SetBins(300, 0, 8e2);
-	dEPer1mm.GetXaxis()->SetTitle("Deposit energy per gap, eV");
-
-	TH1F dEPer1mmTrunc;
-	dEPer1mmTrunc.SetName("dEPerGapTrunc");
-	dEPer1mmTrunc.SetBins(300, 0, 8e2);
-	dEPer1mmTrunc.GetXaxis()->SetTitle("Deposit energy per gap (truncated), eV");
+//	TH1F NePerCluster;
+//	NePerCluster.SetName("NePerCluster");
+//	NePerCluster.SetBins(2000, 0, 2000);
+//
+//	TH1F hX;
+//	hX.SetName("X");
+//	hX.SetBins(300, 0, chamberLength);
+//	hX.GetXaxis()->SetTitle("X, cm");
+//
+//	TH1F hY;
+//	hY.SetName("Y");
+//	hY.SetBins(300, -20, 20);
+//	hY.GetXaxis()->SetTitle("Y, cm");
+//
+//	TH1F hZ;
+//	hZ.SetName("Z");
+//	hZ.SetBins(300, -20, 20);
+//	hZ.GetXaxis()->SetTitle("Z, cm");
+//
+//	TH1F dEPerCluster;
+//	dEPerCluster.SetName("dEPerCluster");
+//	dEPerCluster.SetBins(3000, 0, 7.5e+03*chamberLength);
+//	dEPerCluster.GetXaxis()->SetTitle("Cluster deposit energy, eV");
+//
+//	TH1F dEPerTrack;
+//	dEPerTrack.SetName("dEPerTrack");
+//	dEPerTrack.SetBins(150, 0, 8.75e3*chamberLength);
+//	dEPerTrack.GetXaxis()->SetTitle("Track deposit energy, eV");
+//
+//	TH1F NePerTrack;
+//	NePerTrack.SetName("NePerTrack");
+//	NePerTrack.SetBins(150, 0, 2e+02*chamberLength);
+//	NePerTrack.GetXaxis()->SetTitle("Track primary electrons");
+//
+//	TH1F dNePer1mm;
+//	dNePer1mm.SetName("dNePerGap");
+//	dNePer1mm.SetBins(300, 0, 20);
+//	dNePer1mm.GetXaxis()->SetTitle("Primary electrons per gap");
+//
+//	TH1F dNePer1mmTrunc;
+//	dNePer1mmTrunc.SetName("dNePerGapTrunc");
+//	dNePer1mmTrunc.SetBins(300, 0, 20);
+//	dNePer1mmTrunc.GetXaxis()->SetTitle("Primary electrons per gap, truncated");
+//
+//	TH1F dEPer1mm;
+//	dEPer1mm.SetName("dEPerGap");
+//	dEPer1mm.SetBins(300, 0, 8e2);
+//	dEPer1mm.GetXaxis()->SetTitle("Deposit energy per gap, eV");
+//
+//	TH1F dEPer1mmTrunc;
+//	dEPer1mmTrunc.SetName("dEPerGapTrunc");
+//	dEPer1mmTrunc.SetBins(300, 0, 8e2);
+//	dEPer1mmTrunc.GetXaxis()->SetTitle("Deposit energy per gap (truncated), eV");
 
 	int nGaps = chamberLength/dl + 1;
 
@@ -224,77 +241,64 @@ void LRun::Analyze()
 	std::vector<double> meandEPerGap(nEvents, 0.);
 
 	for(std::vector<LTrack*>::iterator itr = tracks->begin(); itr != tracks->end(); ++itr) {
+		fPosX.clear();
+		fPosY.clear();
+		fPosZ.clear();
+		fdEPerCluster.clear();
+		fNePerCluster.clear();
+
+		fdEPerGap.clear();
+		fNePerGap.clear();
+
+		fdEPerTrack = 0.;
+		fNePerTrack = 0.;
+
 		LTrack* track = *itr;
-		double esum = 0.;
-		double nsum = 0.;
-		for(int igap=0; igap<nGaps; ++igap) nEperGapAlongTrack[igap] = 0;
-		for(int igap=0; igap<nGaps; ++igap) dEperGapAlongTrack[igap] = 0;
+		fdEPerGap.resize(nGaps, 0.);
+		fNePerGap.resize(nGaps, 0.);
 
 		for(std::vector<LHit*>::iterator ihit = track->hits->begin(); ihit != track->hits->end(); ++ihit) {
 			LHit* hit = *ihit;
-			hX.Fill(hit->X);
-			hY.Fill(hit->Y);
-			hZ.Fill(hit->Z);
-			NePerCluster.Fill(hit->nE);
-			dEPerCluster.Fill(hit->Ch);
 
-			nsum += hit->nE;
-			esum += hit->Ch;
+			fPosX.push_back(hit->X);
+			fPosY.push_back(hit->Y);
+			fPosZ.push_back(hit->Z);
+			fNePerCluster.push_back(hit->nE);
+			fdEPerCluster.push_back(hit->Ch/keV);
 
-			nEperGapAlongTrack[hit->X/dl] += hit->nE;  // hits per gap
-			dEperGapAlongTrack[hit->X/dl] += hit->Ch;  // dE per gap
+			fNePerTrack += hit->nE;
+			fdEPerTrack += hit->Ch/keV;
+
+			fNePerGap[hit->X/dl] += hit->nE;  // hits per gap
+			fdEPerGap[hit->X/dl] += hit->Ch/keV;  // dE per gap
 		}
-		dEPerTrack.Fill(esum);
-		NePerTrack.Fill(nsum);
-
-		int index = itr-tracks->begin();
-		meanNePerGap[index] = Mean(nEperGapAlongTrack);
-		for(std::vector<double>::iterator igap = nEperGapAlongTrack.begin(); igap != nEperGapAlongTrack.end(); ++igap) {
-			dNePer1mm.Fill(*igap);
-		}
-
-		meandEPerGap[index] = Mean(dEperGapAlongTrack);
-		for(std::vector<double>::iterator igap = dEperGapAlongTrack.begin(); igap != dEperGapAlongTrack.end(); ++igap) {
-			dEPer1mm.Fill(*igap);
-		}
+		detectorTree->Fill();
 	}
+	detectorTree->Write();
+//	/**
+//	 * TODO Truncation
+//	 */
+//	std::sort (meanNePerGap.begin(), meanNePerGap.end());
+//	for(int i=0; i<0.8*meanNePerGap.size(); ++i) {
+//		dNePer1mmTrunc.Fill(meanNePerGap[i]);
+//	}
+//
+//	std::sort (meandEPerGap.begin(), meandEPerGap.end());
+//	for(int i=0; i<0.8*meandEPerGap.size(); ++i) {
+//		dEPer1mmTrunc.Fill(meandEPerGap[i]);
+//	}
 
 	/**
-	 * Truncation
+	 * Save data
 	 */
-	std::sort (meanNePerGap.begin(), meanNePerGap.end());
-	for(int i=0; i<0.8*meanNePerGap.size(); ++i) {
-		dNePer1mmTrunc.Fill(meanNePerGap[i]);
-	}
-
-	std::sort (meandEPerGap.begin(), meandEPerGap.end());
-	for(int i=0; i<0.8*meandEPerGap.size(); ++i) {
-		dEPer1mmTrunc.Fill(meandEPerGap[i]);
-	}
-
-	/**
-	 * Save histograms
-	 */
-	hX.Write();
-	hY.Write();
-	hZ.Write();
-	NePerCluster.Write();
-	dEPerCluster.Write();
-	dEPerTrack.Write();
-	NePerTrack.Write();
-	dNePer1mm.Write();
-	dNePer1mmTrunc.Write();
-	dEPer1mm.Write();
-	dEPer1mmTrunc.Write();
-
-	dETruncPer1mmFitted = dEPer1mmTrunc.GetMean();
-	dETruncPer1mmFittedError = dEPer1mmTrunc.GetStdDev();
+	dETruncPer1mmFitted = 1;
+	dETruncPer1mmFittedError = 1;
 }
 
 std::string LRun::GenerateDirName()
 {
 	std::ostringstream strs;
-	strs << "E=" << energy*1e-6 << "MeV";
+	strs << "E=" << energy/MeV << "MeV";
 //	strs << "gap=" << dl*10 << "mm";
 
 	return strs.str();
