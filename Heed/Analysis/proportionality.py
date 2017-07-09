@@ -51,6 +51,9 @@ def plot(tfile):
     c1.Print("%d_Sigmas.pdf" % counter)
     counter += 1
     
+    for i in range(n_points):
+        print "%.3f\t%.5f" % (energies[i], mpv_ratios[i])
+    
     print_and_clean()
     
 
