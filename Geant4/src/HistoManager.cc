@@ -40,6 +40,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
+#include <string>
+
 #include "HistoManager.hh"
 #include "G4UnitsTable.hh"
 #include "Histo.hh"
@@ -48,6 +50,9 @@
 #include "G4ElectronIonPair.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4RunManager.hh"
+
+#include "PrimaryGeneratorAction.hh"
 
 #include <TFile.h>
 #include <TTree.h>
@@ -286,15 +291,20 @@ void HistoManager::AddEnergy(G4double edep, const G4Step* step)
 
 void HistoManager::InitializeROOT()
 {
-	G4String fileName = "G4EDep.root";
-	fRootFile = new TFile(fileName, "RECREATE");
+	G4String filename = "G4.root";
+	fRootFile = new TFile(filename, "RECREATE");
 
 	if(!fRootFile) {
 		G4cout << "OutputManager::Initialize: Problem creating the ROOT TFile" << G4endl;
 		return;
 	}
 
-	fDetectorTree = new TTree("GasDetector", "Conversion");
-	fDetectorTree->Branch("EDep", &fTotEdepROOT);
-	fDetectorTree->Branch("nPrimElec", &fMeanClusterROOT);
+	G4double en = ((PrimaryGeneratorAction*)G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction())->GetParticleEnergy();
+	std::stringstream s;
+	s <<  std::fixed << std::setprecision(2) << "E=" << en/MeV << "MeV";
+	G4cout <<"============= "<< s.str() << G4endl;
+	fDetectorTree = new TTree(s.str().c_str(), "GasDetector");
+	fDetectorTree->Branch("dEPerTrack", &fTotEdepROOT);
+	fDetectorTree->Branch("NePerTrack", &fMeanClusterROOT);
 }
+

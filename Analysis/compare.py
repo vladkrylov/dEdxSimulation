@@ -22,7 +22,7 @@ def get_Heed_distribution(model=PAI):
     tree = f.Get("E=3MeV")
     for event in tree:
         dist.append(event.dEPerTrack)
-        
+    
     if len(dist) == 0:
         print "No data found for Geant4 distribution"
         
@@ -63,11 +63,12 @@ def plot_comparison(energy, linlogY=LIN):
     
     if linlogY == LOG:
         c1.Setlogy()
-        
+    
     raw_input("Press ENTER to stop the script")
     
     
 if __name__ == "__main__":
     plot_comparison(3*MeV)
+
 
 
