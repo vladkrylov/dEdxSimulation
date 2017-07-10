@@ -71,7 +71,12 @@ int main(int argc,char** argv)
   runManager->SetUserAction(new EventAction());
   runManager->SetUserAction(new StackingAction());
   
-  G4UImanager* UI = G4UImanager::GetUIpointer();  
+  G4UImanager* UI = G4UImanager::GetUIpointer();
+
+#ifdef G4VIS_USE
+      G4VisManager* visManager = new G4VisExecutive;
+      visManager->Initialize();
+#endif
 
   if (argc!=1)   // batch mode  
     {
@@ -80,12 +85,12 @@ int main(int argc,char** argv)
       UI->ApplyCommand(command+fileName);
     }
     
-  else           //define visualization and UI terminal for interactive mode
+  else           // define visualization and UI terminal for interactive mode
     { 
-#ifdef G4VIS_USE
-      G4VisManager* visManager = new G4VisExecutive;
-      visManager->Initialize();
-#endif    
+//#ifdef G4VIS_USE
+//      G4VisManager* visManager = new G4VisExecutive;
+//      visManager->Initialize();
+//#endif
      
 #ifdef G4UI_USE
       G4UIExecutive * ui = new G4UIExecutive(argc,argv);      

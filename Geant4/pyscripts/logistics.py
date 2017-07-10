@@ -2,7 +2,7 @@ import re
 import ROOT as r
 
 from os.path import join, isdir, isfile
-from os import access, remove, rename
+from os import access, remove, rename, X_OK
 from subprocess import call
 from change_parameter import change_parameter
 from SystemOfUnits import *
@@ -27,6 +27,19 @@ def run_mac():
     run_mac_full = join(proj_dir, run_mac_fname)
     if isfile(run_mac_full):
         return run_mac_full
+
+    return None
+
+
+def vis_mac():
+    vis_mac_fname = "vis.mac"
+    proj_dir = get_proj_dir()
+    if not proj_dir:
+        return None
+    
+    vis_mac_full = join(proj_dir, vis_mac_fname)
+    if isfile(vis_mac_full):
+        return vis_mac_full
 
     return None
 
@@ -59,12 +72,12 @@ def G4sim_exe():
         return None
     
     exe_full = join(proj_dir, exe_fname)
-    if isfile(exe_full) and os.access(fpath, os.X_OK):
+    if isfile(exe_full) and access(exe_full, X_OK):
         return exe_full
     
 
-def run():
-    call([join(get_proj_dir(), "build/TestEm8"), join(get_proj_dir(), "TestEm8.in")])
+def run(mac_file):
+    call([G4sim_exe(), mac_file])
     
     
 def run2file(target_file):
@@ -73,7 +86,7 @@ def run2file(target_file):
     proj_dir = get_proj_dir()
     default_res_file = join(proj_dir, "build/%s" % def_tfile_name)
     
-    run()
+    run(run_mac())
     
     if not isfile(default_res_file):
         print("ROOT file %s with Geant4 simulation results not found!") % default_res_file

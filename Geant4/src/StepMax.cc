@@ -31,6 +31,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+#include "G4SystemOfUnits.hh"
 #include "StepMax.hh"
 #include "StepMaxMessenger.hh"
 #include "G4VPhysicalVolume.hh"
@@ -39,7 +40,7 @@
 
 StepMax::StepMax(const G4String& processName)
   : G4VDiscreteProcess(processName),
-    fMaxChargedStep(DBL_MAX),
+    fMaxChargedStep(10.*mm),
     fMessenger(0)
 {
   fMessenger = new StepMaxMessenger(this);
