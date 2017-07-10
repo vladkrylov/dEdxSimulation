@@ -1,14 +1,20 @@
+import sys
 import ROOT as r
 
 from SystemOfUnits import * 
 from __builtin__ import raw_input
 
-def get_G4_distribution(model):
-    f = r.TFile("../Geant4/build/G4EDep.root")
+sys.path.append("../Geant4/pyscripts")
+from logistics import get_tree_name
+
+
+def get_G4_distribution(energy, model):
+    f = r.TFile("../Geant4/Results/G4.root")
     dist = []
-    tree = f.Get("GasDetector")
+    tree_name = get_tree_name(energy/MeV, "MeV")
+    tree = f.Get(tree_name)
     for event in tree:
-        dist.append(event.EDep)
+        dist.append(event.dEPerTrack)
         
     if len(dist) == 0:
         print "No data found for Geant4 distribution"
@@ -16,10 +22,11 @@ def get_G4_distribution(model):
     return dist
 
 
-def get_Heed_distribution(model=PAI):
+def get_Heed_distribution(energy, model=PAI):
     f = r.TFile("../Heed/Results.root")
     dist = []
-    tree = f.Get("E=3MeV")
+    tree_name = get_tree_name(energy/MeV, "MeV")
+    tree = f.Get(tree_name)
     for event in tree:
         dist.append(event.dEPerTrack)
         
@@ -54,8 +61,8 @@ def get_hist(distribution,
 
 def plot_comparison(energy, linlogY=LIN):
     c1 = r.TCanvas("c", "c", 50, 50, 900, 600)
-    hists = [get_hist(  get_G4_distribution(PAI), name="h1", color=r.kRed), 
-             get_hist(get_Heed_distribution(PAI), name="h2", color=r.kGreen)]
+    hists = [get_hist(  get_G4_distribution(3*MeV, PAI), name="h1", color=r.kRed), 
+             get_hist(get_Heed_distribution(3*MeV, PAI), name="h2", color=r.kGreen)]
     
     hists[0].Draw()
     for i in range(1, len(hists)):
