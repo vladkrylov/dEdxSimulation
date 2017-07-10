@@ -7,12 +7,15 @@ from __builtin__ import raw_input
 sys.path.append("../Geant4/pyscripts")
 from logistics import get_tree_name
 
+def get_G4_resfile(model):
+    return "../Geant4/Results/3MeV/G4" + model.lower() + ".root"
 
-def get_G4_distribution(energy, model):
-    f = r.TFile("../Geant4/Results/G4.root")
+
+def get_G4_distribution(model):
+    f = r.TFile(get_G4_resfile(model))
     dist = []
-    tree_name = get_tree_name(energy/MeV, "MeV")
-    tree = f.Get(tree_name)
+    tree = f.Get("E=3.00MeV")
+
     for event in tree:
         dist.append(event.dEPerTrack)
         
@@ -22,14 +25,15 @@ def get_G4_distribution(energy, model):
     return dist
 
 
-def get_Heed_distribution(energy, model=PAI):
+
+def get_Heed_distribution(model="PAI"):
     f = r.TFile("../Heed/Results.root")
     dist = []
-    tree_name = get_tree_name(energy/MeV, "MeV")
-    tree = f.Get(tree_name)
+    tree = f.Get("E=3.00MeV")
+    
     for event in tree:
         dist.append(event.dEPerTrack)
-        
+    
     if len(dist) == 0:
         print "No data found for Geant4 distribution"
         
@@ -61,8 +65,15 @@ def get_hist(distribution,
 
 def plot_comparison(energy, linlogY=LIN):
     c1 = r.TCanvas("c", "c", 50, 50, 900, 600)
-    hists = [get_hist(  get_G4_distribution(3*MeV, PAI), name="h1", color=r.kRed), 
-             get_hist(get_Heed_distribution(3*MeV, PAI), name="h2", color=r.kGreen)]
+    hists = [get_hist(get_G4_distribution("PAI"), name="PAI", color=r.kBlue),
+             get_hist(get_G4_distribution("emstandard_opt1"), name="emstandard_opt1", color=r.kRed+1),
+             get_hist(get_G4_distribution("emstandard_opt2"), name="emstandard_opt2", color=r.kRed+2),
+             get_hist(get_G4_distribution("emstandard_opt3"), name="emstandard_opt3", color=r.kRed+3),
+             get_hist(get_G4_distribution("emstandard_opt4"), name="emstandard_opt4", color=r.kRed-1),
+             get_hist(get_G4_distribution("emlivermore"), name="emlivermore", color=r.kRed-2),
+             get_hist(get_G4_distribution("empenelope"), name="empenelope", color=r.kRed-3),
+             get_hist(get_Heed_distribution("PAI"), name="h2", color=r.kGreen)]
+
     
     hists[0].Draw()
     for i in range(1, len(hists)):
@@ -70,11 +81,12 @@ def plot_comparison(energy, linlogY=LIN):
     
     if linlogY == LOG:
         c1.Setlogy()
-        
+    
     raw_input("Press ENTER to stop the script")
     
     
 if __name__ == "__main__":
     plot_comparison(3*MeV)
+
 
 
