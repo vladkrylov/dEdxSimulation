@@ -31,12 +31,15 @@ def run_mac():
     return None
 
 
-def ttree_name():
-    with open(run_mac(), 'r') as f:
-        candidates = re.findall("/gun/energy\s+(\d+\.*\d*\s+[a-zA-z]+)\s*\n", f.read())
-        str_val = candidates[0]
-        value, units = candidates[0].split()
-        return "E=%.2f%s" % (float(value), units)
+def get_tree_name(value=None, units=None):
+    if value == None or units == None:  # get energy from run_mac
+        with open(run_mac(), 'r') as f:
+            candidates = re.findall("/gun/energy\s+(\d+\.*\d*\s+[a-zA-z]+)\s*\n", f.read())
+            str_val = candidates[0]
+            value, units = candidates[0].split()
+            
+    return "E=%.2f%s" % (float(value), units)
+        
 
 
 def ttree_exists(tfile, ttree_name):
@@ -79,17 +82,15 @@ def run2file(target_file):
     if not isfile(target_file):  # target file does not exist, simple move 
         call(["mv", default_res_file, target_file])
     else:  # target file exists check if it already contains the same TTree
-        ntree = ttree_name()
+        tree_name = get_tree_name()
         f = r.TFile(target_file)
-        if not ttree_exists(f, ntree):  # TTree does not exist, merge files
+        if not ttree_exists(f, tree_name):  # TTree does not exist, merge files
             tmp = target_file + "_tmp"
             call(["hadd", "-f", tmp, default_res_file, target_file])
             remove(target_file)
             rename(tmp, target_file)
         else:  # TTree with the same name already exist, throw warning  
-            print("TTree %s already exists in TFile %s. Merge was not performed.") % (ntree, target_file)
-            print ntree
-            print f.Get(ntree)
+            print("TTree %s already exists in TFile %s. Merge was not performed.") % (tree_name, target_file)
             return None
 
     return True
