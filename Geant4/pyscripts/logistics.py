@@ -16,6 +16,10 @@ def get_proj_dir():
         return local_proj_dir
 
     return None
+
+
+def get_proj_path(path_in_project):
+    return join(get_proj_dir(), path_in_project)
     
     
 def run_mac():
@@ -80,7 +84,7 @@ def run(mac_file):
     call([G4sim_exe(), mac_file])
     
     
-def run2file(target_file):
+def run2file(target_file, mode="update"):
     def_tfile_name = "G4.root"
     
     proj_dir = get_proj_dir()
@@ -94,6 +98,9 @@ def run2file(target_file):
     
     if not isfile(target_file):  # target file does not exist, simple move 
         call(["mv", default_res_file, target_file])
+    elif mode.lower() == 'recreate':
+        remove(target_file)
+    
     else:  # target file exists check if it already contains the same TTree
         tree_name = get_tree_name()
         f = r.TFile(target_file)
@@ -111,5 +118,9 @@ def run2file(target_file):
 
 def set_energy(en):
     change_parameter(run_mac(), "/gun/energy", "%.2f MeV" % (en))
+
+
+def set_phys_model(m):
+    change_parameter(run_mac(), "/testem/phys/addPhysics", "%s" % m)
 
 

@@ -286,7 +286,7 @@ void HistoManager::AddEnergy(G4double edep, const G4Step* step)
     fCluster += fElIonPair->SampleNumberOfIonsAlongStep(step);
 
 //    G4cout << fElIonPair->MeanNumberOfIonsAlongStep(step)/mm << G4endl;
-    G4cout << step->GetStepLength() <<"\t"<< fElIonPair->MeanNumberOfIonsAlongStep(step) << G4endl;
+//    G4cout << step->GetStepLength() <<"\t"<< fElIonPair->MeanNumberOfIonsAlongStep(step) << G4endl;
   }
 }
 

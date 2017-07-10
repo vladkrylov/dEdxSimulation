@@ -9,7 +9,7 @@
 #
 #  select EM PhysicsList
 #
-/testem/phys/addPhysics  pai
+/testem/phys/addPhysics pai
 #/testem/phys/addPhysics  pai_photon
 #
 #/testem/stepMax         10 mm
