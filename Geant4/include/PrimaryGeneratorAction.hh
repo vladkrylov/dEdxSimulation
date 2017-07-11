@@ -64,6 +64,7 @@ public:
   virtual void GeneratePrimaries(G4Event*);
 
   void SetPositionZ(G4double value);
+  G4double GetParticleEnergy() { return fParticleGun->GetParticleEnergy(); }
     
 private:
 
