@@ -49,6 +49,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
+#include <vector>
+
 #include "globals.hh"
 #include "G4DataVector.hh"
 #include "G4StatDouble.hh"
@@ -88,6 +90,7 @@ public: // Without description
 
   void InitializeROOT();
   void AddEnergy(G4double edep, const G4Step*);
+  void AddPrimaryElectron(G4double energy);
 
   inline void SetMaxEnergy(G4double value);
 
@@ -134,6 +137,8 @@ private:
   // ROOT
   G4double fTotEdepROOT;
   G4double fMeanClusterROOT;
+  G4double fNPrimElec;
+  std::vector<G4double> fEnergyOfPrim;
   TFile*   fRootFile;
   TTree*   fDetectorTree;
 };
