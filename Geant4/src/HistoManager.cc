@@ -242,6 +242,9 @@ void HistoManager::BeginOfEvent()
   fTotEdep = 0.0;
   fStepGas = 0;
   fCluster = 0;
+
+  fNPrimElec = 0.;
+  fEnergyOfPrim.clear();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -285,7 +288,7 @@ void HistoManager::AddEnergy(G4double edep, const G4Step* step)
     fMeanCluster += fElIonPair->MeanNumberOfIonsAlongStep(step);
     fCluster += fElIonPair->SampleNumberOfIonsAlongStep(step);
 
-//    G4cout << fElIonPair->MeanNumberOfIonsAlongStep(step)/mm << G4endl;
+    G4cout << fElIonPair->MeanNumberOfIonsAlongStep(step)/mm << G4endl;
 //    G4cout << step->GetStepLength() <<"\t"<< fElIonPair->MeanNumberOfIonsAlongStep(step) << G4endl;
   }
 }
@@ -308,6 +311,13 @@ void HistoManager::InitializeROOT()
 	G4cout <<"============= "<< s.str() << G4endl;
 	fDetectorTree = new TTree(s.str().c_str(), "GasDetector");
 	fDetectorTree->Branch("dEPerTrack", &fTotEdepROOT);
-	fDetectorTree->Branch("NePerTrack", &fMeanClusterROOT);
+	fDetectorTree->Branch("NePerTrack_Est", &fCluster);
+	fDetectorTree->Branch("NePerTrack_StpAcn", &fNPrimElec);
+	fDetectorTree->Branch("SecondaryElecronEnergy", &fEnergyOfPrim);
 }
 
+void HistoManager::AddPrimaryElectron(G4double energy)
+{
+	fNPrimElec++;
+	fEnergyOfPrim.push_back(energy);
+}

@@ -73,8 +73,8 @@ StackingAction::ClassifyNewTrack(const G4Track* aTrack)
   if(aTrack->GetVolume()->GetLogicalVolume()->GetSensitiveDetector() &&
      aTrack->GetDefinition()->GetPDGCharge() != 0.0) 
     {
-      fHisto->AddEnergy(aTrack->GetKineticEnergy(), 0); 
-      status = fKill;    
+//      fHisto->AddEnergy(aTrack->GetKineticEnergy(), 0);
+//      status = fKill;
     }
   return status;
 }
