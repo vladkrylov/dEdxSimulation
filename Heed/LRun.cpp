@@ -298,7 +298,7 @@ void LRun::Analyze()
 std::string LRun::GenerateDirName()
 {
 	std::ostringstream strs;
-	strs << "E=" << energy/MeV << "MeV";
+	strs << std::fixed << std::setprecision(2) << "E=" << energy/MeV << "MeV";
 //	strs << "gap=" << dl*10 << "mm";
 
 	return strs.str();
