@@ -4,11 +4,11 @@ from subprocess import Popen, PIPE
 # Simulation parameters
 # FIRST CARD: NGAS,NDELTA,IMIP,NDVEC,NSEED,ESTART,ETHRM,ECUT
 NGAS = 2
-NDELTA = 10000
+NDELTA = 20
 IMIP = 1
 NDVEC = 1
 NSEED = 0
-ESTART = 1.69e6
+ESTART = 3e6
 ETHRM = 20.
 ECUT = 5000.
 
@@ -31,10 +31,10 @@ TEMP = 20.
 TORR = 760.
 
 # FOURTH CARD : EFIELD,BMAG,BTHETA,IWRITE,IPEN
-EFIELD = 1200
+EFIELD = 0
 BMAG = 0
 BTHETA = 0
-IWRITE = 0
+IWRITE = 1
 IPEN = 0
 
 # FIFTH CARD: DETEFF,EXCWGHT,KGAS,LGAS,LCMP,LRAY,LPAP,LBRM,IECASC
@@ -66,7 +66,7 @@ print input
 degrad = Popen(['/home/vlad/10g4work/gasEDep/Degrad/degrad'], stdout=PIPE, stdin=PIPE, stderr=PIPE)
 out, err = degrad.communicate(input=input)
  
-outfile = open("outfile.txt", "w")
+outfile = open("stdout.txt", "w")
 outfile.write(out.decode())
 
 
