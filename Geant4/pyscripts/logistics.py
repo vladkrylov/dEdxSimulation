@@ -32,16 +32,7 @@ def get_build_dir():
 
 
 def run_mac():
-    run_mac_fname = "TestEm8.in"
-    proj_dir = get_proj_dir()
-    if not proj_dir:
-        return None
-    
-    run_mac_full = join(proj_dir, run_mac_fname)
-    if isfile(run_mac_full):
-        return run_mac_full
-
-    return None
+    return get_proj_path("TestEm8.in")
 
 
 def vis_mac():
@@ -57,7 +48,7 @@ def vis_mac():
     return None
 
 
-def get_tree_name(value=None, units=None):
+def form_tree_name(value=None, units=None):
     if value == None or units == None:  # get energy from run_mac
         with open(run_mac(), 'r') as f:
             candidates = re.findall("/gun/energy\s+(\d+\.*\d*\s+[a-zA-z]+)\s*\n", f.read())
@@ -96,8 +87,9 @@ def run(mac_file):
 def run2file(target_file, mode="update", tree_name=None):
     def_tfile_name = "G4.root"
     if not tree_name:
-        tree_name = get_tree_name()
-    print "================================= %s" % tree_name
+        tree_name = form_tree_name()
+    
+    set_ttree_name(tree_name)
     
     proj_dir = get_proj_dir()
     default_res_file = join(proj_dir, "build/%s" % def_tfile_name)
@@ -146,6 +138,8 @@ def set_secondary_cut_lower(val):
     change_parameter(run_mac(), "/cuts/setLowEdge", "%.2f eV" % (val/eV))    
 
 
+def set_ttree_name(val):
+    change_parameter(run_mac(), "/testem/histo/setRootTreeName", val)    
 
 
 
