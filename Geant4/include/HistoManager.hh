@@ -60,7 +60,6 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-class Histo;
 class G4Step;
 class G4ElectronIonPair;
 
@@ -130,11 +129,8 @@ private:
   G4bool fHistoBooked;
 
   G4double fTotEdep;
-  G4StatDouble fEdep;
   G4double fOverflow;
-  G4DataVector fEgas;
 
-  Histo*   fHisto;
   G4ElectronIonPair* fElIonPair;
 
   // ROOT

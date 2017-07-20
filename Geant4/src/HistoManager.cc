@@ -45,7 +45,6 @@
 
 #include "HistoManager.hh"
 #include "G4UnitsTable.hh"
-#include "Histo.hh"
 #include "G4Step.hh"
 #include "G4LossTableManager.hh"
 #include "G4ElectronIonPair.hh"
@@ -74,18 +73,11 @@ HistoManager* HistoManager::GetPointer()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 HistoManager::HistoManager()
-: fHisto(0)
-, fElIonPair(0)
+: fElIonPair(0)
 , fRootFile(0)
 , fDetectorTree(0)
 //, fTreeName("")
 {
-  fNHisto      = 2;
-  fVerbose     = 1;
-  fMaxEnergy   = 100.*keV;
-  fBinsE       = 100;
-  fBinsCluster = 200;
-
   // normalisation to PAI
   fFactorALICE = 325;
 
@@ -104,7 +96,6 @@ HistoManager::HistoManager()
 
   fHistoBooked = false;
 
-  fHisto     = new Histo();
   fElIonPair = G4LossTableManager::Instance()->ElectronIonPair();
 }
 
@@ -112,7 +103,6 @@ HistoManager::HistoManager()
 
 HistoManager::~HistoManager()
 {
-  delete fHisto;
   if (fRootFile) delete fRootFile;
 }
 
@@ -128,106 +118,12 @@ void HistoManager::BeginOfRun()
   fOverflow   = 0.0;
 
   InitializeROOT();
-
-  if(fHisto->IsActive() && !fHistoBooked) { 
-
-    fHisto->Add1D("10","Energy deposition in detector (keV)",
-                  fBinsE,0.0,fMaxEnergy/keV,1.0);
-    fHisto->Add1D("11","Number of primary clusters",
-                  fBinsCluster,-0.5,fBinsCluster-0.5,1.0);
-    fHisto->Add1D("12","Energy deposition in detector (ADC)",
-                  200,0.0,2000,1.0);
-
-    fHisto->Activate(0, true); 
-    fHisto->Activate(1, true); 
-    fHisto->Activate(2, true); 
-  }
-  fHisto->Book();
-
-  fEgas.resize(fBinsE,0.0);
-  fEdep.reset();
-
-  if(fVerbose > 0) {
-    G4cout << "HistoManager: Histograms are booked and run has been started"
-           << G4endl;
-    G4cout << " BinsCluster= " << fBinsCluster << "    BinsE= " <<  fBinsE
-           << "   Emax(keV)= " << fMaxEnergy/keV << G4endl;
-  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void HistoManager::EndOfRun()
 {
-  G4double norm = fEvt;
-  if(fEvt > 0.0) { norm = 1.0/norm; }
-
-  fTotStepGas  *= norm;
-  fTotCluster  *= norm;
-  fMeanCluster *= norm;
-  fOverflow    *= norm;
-
-  G4double y1 = fEdep.mean();
-  G4double y2 = sqrt(fEdep.rms());
-
-  G4double de = fMaxEnergy/G4double(fBinsE);  
-  G4double x1 = -de*0.5; 
-  
-  G4cout << " ================== run summary =====================" << G4endl;
-  G4int prec = G4cout.precision(5);
-  G4cout << "   End of Run TotNbofEvents    = " 
-         << G4int(fEvt) << G4endl;
-  G4cout << "   Energy(keV) per ADC channel = " 
-         << 1.0/(keV*fFactorALICE) << G4endl;
-  /*
-  G4double p1 = 1*GeV;
-  G4double p2 = 3*GeV;
-  G4double mass = proton_mass_c2;
-  G4cout << sqrt(p1*p1 + mass*mass) - mass << "   " 
-         << sqrt(p2*p2 + mass*mass) - mass << G4endl; 
-  */
-  G4cout << G4endl;
-  G4cout << "   Mean energy deposit in absorber = " <<
-           y1/keV << " +- " << y2*std::sqrt(norm)/keV << " keV; ";
-  if(y1 > 0.0) { G4cout << "   RMS/Emean = " << y2/y1; }
-  G4cout << G4endl;
-  G4cout << "   Mean number of steps in absorber= " 
-         << fTotStepGas << ";  mean number of ion-clusters = " 
-         << fTotCluster << " MeanCluster= " << fMeanCluster    
-         << G4endl;
-  G4cout << G4endl;
-
-  G4cout << " ====== Energy deposit distribution   Noverflows= " << fOverflow 
-         << " ====== " << G4endl ;
-  G4cout << " bin nb      Elow      entries     normalized " << G4endl;
-
-  std::ofstream fileOut("distribution.out", std::ios::out );
-  fileOut.setf( std::ios::scientific, std::ios::floatfield );
-
-  x1 = 0.0;
-
-  fileOut << fBinsE << G4endl;
- 
-  for(G4int j=0; j<fBinsE; ++j) 
-  {
-    G4cout << std::setw(5) << j << std::setw(10) << x1/keV 
-           << std::setw(12) << fEgas[j] << std::setw(12) << fEgas[j]*norm 
-           << G4endl ;
-    fileOut << x1/keV << "\t" << fEgas[j] << G4endl;
-    x1 += de;
-  }
-  G4cout.precision(prec);
-
-  // normalise histograms
-  if(fHisto->IsActive() && !fHistoBooked) { 
-    fHisto->ScaleH1(0,norm);
-    fHisto->ScaleH1(1,norm);
-    //    fHisto->ScaleH1(2,0.05);
-    fHisto->ScaleH1(2,0.1);
-    fHisto->Save();
-  }
-  G4cout << " ================== run end ==========================" << G4endl;
-
   if (fRootFile) {
 	fRootFile->Write();
 	fRootFile->Close();
@@ -256,18 +152,6 @@ void HistoManager::EndOfEvent()
   fTotCluster += fCluster;
   fTotEdep = std::accumulate(fEnergyOfPrim.begin(), fEnergyOfPrim.end(), 0.);
   
-  G4int idx = G4int(fTotEdep*fBinsE/fMaxEnergy);
-  if(idx < 0) { idx = 0; }
-  if(idx >= fBinsE) { fOverflow += 1.0; }
-  else { fEgas[idx] += 1.0; }
-
-  // fill histo
-  fHisto->Fill(0,fTotEdep/keV,1.0);
-  fHisto->Fill(1,fCluster,1.0);
-  fHisto->Fill(2,fTotEdep*fFactorALICE/keV,1.0);
-
-  fEdep.fill(fTotEdep, 1.0);
-
   if (fDetectorTree) {
 	  fTotEdepROOT = fTotEdep/keV;
 	  fMeanClusterROOT = fMeanCluster;
@@ -299,7 +183,6 @@ void HistoManager::AddEnergy(G4double edep, const G4Step* step)
 
 void HistoManager::InitializeROOT()
 {
-	G4cout << "Here is ok" << G4endl;
 	G4String filename = "G4.root";
 	fRootFile = new TFile(filename, "RECREATE");
 
