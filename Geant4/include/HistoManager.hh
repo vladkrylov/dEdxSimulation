@@ -62,6 +62,7 @@
 
 class G4Step;
 class G4ElectronIonPair;
+class HistoMessenger;
 
 class TFile;
 class TH1D;
@@ -93,23 +94,19 @@ public: // Without description
   void AddPrimaryElectron(G4double energy);
 
   inline void SetMaxEnergy(G4double value);
-
   inline void SetNumberBins(G4int value);
-
   inline void SetNumberBinsCluster(G4int value);
-
   inline void SetEnergyPerChannel(G4double value);
-
   inline void SetVerbose(G4int value);
-
   inline G4int GetVerbose() const;
-
   inline void SetTreeName(const std::string& name);
+  inline void SetRootFileName(const std::string& name);
 
 private:
 
   // MEMBERS
   static HistoManager* fManager;
+  HistoMessenger* fMessenger;
 
   G4int fNHisto;
   G4int fVerbose;
@@ -140,7 +137,8 @@ private:
   std::vector<G4double> fEnergyOfPrim;
   TFile*   fRootFile;
   TTree*   fDetectorTree;
-//  std::string fTreeName;
+  std::string fTreeName;
+  std::string fRootFileName;
 };
 
 inline void HistoManager::SetMaxEnergy(G4double value)
@@ -173,9 +171,14 @@ inline G4int HistoManager::GetVerbose() const
   return fVerbose;
 }
 
-//inline void HistoManager::SetTreeName(const std::string& name)
-//{
-//  fTreeName = name;
-//}
+inline void HistoManager::SetTreeName(const std::string& name)
+{
+  fTreeName = name;
+}
+
+inline void HistoManager::SetRootFileName(const std::string& name)
+{
+  fRootFileName = name;
+}
 
 #endif

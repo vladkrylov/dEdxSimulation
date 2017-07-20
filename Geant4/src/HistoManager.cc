@@ -52,6 +52,7 @@
 #include "G4PhysicalConstants.hh"
 #include "G4RunManager.hh"
 #include "PrimaryGeneratorAction.hh"
+#include "HistoMessenger.hh"
 
 #include <TFile.h>
 #include <TTree.h>
@@ -76,7 +77,8 @@ HistoManager::HistoManager()
 : fElIonPair(0)
 , fRootFile(0)
 , fDetectorTree(0)
-//, fTreeName("")
+, fTreeName("")
+, fMessenger(0)
 {
   // normalisation to PAI
   fFactorALICE = 325;
@@ -97,6 +99,7 @@ HistoManager::HistoManager()
   fHistoBooked = false;
 
   fElIonPair = G4LossTableManager::Instance()->ElectronIonPair();
+  fMessenger = new HistoMessenger(this);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -190,13 +193,13 @@ void HistoManager::InitializeROOT()
 		G4cout << "OutputManager::Initialize: Problem creating the ROOT TFile" << G4endl;
 		return;
 	}
-	std::string fTreeName;
-//	if (fTreeName.empty()) {
+
+	if (fTreeName.empty()) {
 		G4double en = ((PrimaryGeneratorAction*)G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction())->GetParticleEnergy();
 		std::stringstream s;
 		s <<  std::fixed << std::setprecision(2) << "E=" << en/MeV << "MeV";
 		fTreeName = s.str();
-//	}
+	}
 
 	fDetectorTree = new TTree(fTreeName.c_str(), "GasDetector");
 	fDetectorTree->Branch("dEPerTrack", &fTotEdepROOT);
