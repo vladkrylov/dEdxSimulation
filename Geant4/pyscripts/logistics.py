@@ -1,8 +1,8 @@
 import re
 import ROOT as r
 
-from os.path import join, isdir, isfile
-from os import access, remove, rename, X_OK
+from os.path import join, isdir, isfile, normpath
+from os import getcwd, access, remove, rename, X_OK
 from subprocess import call
 from change_parameter import change_parameter
 from SystemOfUnits import *
@@ -19,9 +19,18 @@ def get_proj_dir():
 
 
 def get_proj_path(path_in_project):
-    return join(get_proj_dir(), path_in_project)
-    
-    
+    p = join(get_proj_dir(), path_in_project)
+    if not isdir(p) and not isfile(p):
+        print("Seems like the requested %s does not exists." % p)
+        return None
+
+    return p
+
+
+def get_build_dir():
+    return get_proj_path("build")
+
+
 def run_mac():
     run_mac_fname = "TestEm8.in"
     proj_dir = get_proj_dir()
@@ -84,13 +93,19 @@ def run(mac_file):
     call([G4sim_exe(), mac_file])
     
     
-def run2file(target_file, mode="update"):
+def run2file(target_file, mode="update", tree_name=None):
     def_tfile_name = "G4.root"
+    if not tree_name:
+        tree_name = get_tree_name()
+    print "================================= %s" % tree_name
     
     proj_dir = get_proj_dir()
     default_res_file = join(proj_dir, "build/%s" % def_tfile_name)
     
     run(run_mac())
+    
+    if getcwd() != normpath(get_build_dir()):  # run started from some arbitrary path 
+        rename(join(getcwd(), def_tfile_name), default_res_file)  # move results file
     
     if not isfile(default_res_file):
         print("ROOT file %s with Geant4 simulation results not found!") % default_res_file
@@ -102,7 +117,6 @@ def run2file(target_file, mode="update"):
         remove(target_file)
     
     else:  # target file exists check if it already contains the same TTree
-        tree_name = get_tree_name()
         f = r.TFile(target_file)
         if not ttree_exists(f, tree_name):  # TTree does not exist, merge files
             tmp = target_file + "_tmp"
@@ -124,3 +138,20 @@ def set_phys_model(m):
     change_parameter(run_mac(), "/testem/phys/addPhysics", "%s" % m)
 
 
+def set_secondary_cut_upper(val):
+    change_parameter(run_mac(), "/cuts/setHighEdge", "%.2f GeV" % (val/GeV))
+
+
+def set_secondary_cut_lower(val):
+    change_parameter(run_mac(), "/cuts/setLowEdge", "%.2f eV" % (val/eV))    
+
+
+
+
+
+
+
+
+
+    
+    

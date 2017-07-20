@@ -33,6 +33,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "HistoMessenger.hh"
+#include "HistoManager.hh"
 
 #include <sstream>
 
@@ -51,6 +52,8 @@ HistoMessenger::HistoMessenger(Histo* hist)
    fFileCmd(0),
    fHistoCmd(0)
 {
+//  fHistoManager = HistoManager::GetPointer();
+
   fHistoDir = new G4UIdirectory("/testem/histo/");
   fHistoDir->SetGuidance("histograms control");
 
@@ -86,6 +89,12 @@ HistoMessenger::HistoMessenger(Histo* hist)
   unit->SetDefaultValue("none");
   fHistoCmd->SetParameter(unit);
 
+
+//  fRootFileName = new G4UIcmdWithAString("/testem/histo/RootFileName",this);
+//  fRootFileName->SetGuidance("Must be an absolute path");
+//
+//  fRootTreeName = new G4UIcmdWithAString("/testem/histo/RootTreeName",this);
+//  fRootTreeName->SetGuidance("TTree name");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -118,6 +127,10 @@ void HistoMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
     if(vUnit <= 0.0)   { vUnit = 1.; }
     fHisto->SetHisto1D(ih,nbBins,vmin,vmax,vUnit);
   }
+
+//  if (command == fRootTreeName) {
+//    if (fHistoManager) fHistoManager->SetTreeName(newValues);
+//  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

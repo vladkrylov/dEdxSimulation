@@ -43,6 +43,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class Histo;
+class HistoManager;
 class G4UIdirectory;
 class G4UIcommand;
 class G4UIcmdWithAString;
@@ -61,12 +62,15 @@ public:
 private:
 
   Histo*                  fHisto;
+  HistoManager*           fHistoManager;
    
   G4UIdirectory*          fHistoDir;   
   G4UIcmdWithAString*     fFactoryCmd;
   G4UIcmdWithAString*     fFileCmd;
   G4UIcommand*            fHistoCmd;
-
+//
+//  G4UIcmdWithAString*     fRootFileName;
+//  G4UIcmdWithAString*     fRootTreeName;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

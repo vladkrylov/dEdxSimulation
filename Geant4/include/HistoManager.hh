@@ -50,6 +50,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include <vector>
+#include <string>
 
 #include "globals.hh"
 #include "G4DataVector.hh"
@@ -104,6 +105,8 @@ public: // Without description
 
   inline G4int GetVerbose() const;
 
+  inline void SetTreeName(const std::string& name);
+
 private:
 
   // MEMBERS
@@ -141,6 +144,7 @@ private:
   std::vector<G4double> fEnergyOfPrim;
   TFile*   fRootFile;
   TTree*   fDetectorTree;
+//  std::string fTreeName;
 };
 
 inline void HistoManager::SetMaxEnergy(G4double value)
@@ -172,5 +176,10 @@ inline G4int HistoManager::GetVerbose() const
 {
   return fVerbose;
 }
+
+//inline void HistoManager::SetTreeName(const std::string& name)
+//{
+//  fTreeName = name;
+//}
 
 #endif

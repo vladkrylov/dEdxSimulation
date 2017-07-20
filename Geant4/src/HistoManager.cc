@@ -41,6 +41,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include <string>
+#include <algorithm>
 
 #include "HistoManager.hh"
 #include "G4UnitsTable.hh"
@@ -51,7 +52,6 @@
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4RunManager.hh"
-
 #include "PrimaryGeneratorAction.hh"
 
 #include <TFile.h>
@@ -78,6 +78,7 @@ HistoManager::HistoManager()
 , fElIonPair(0)
 , fRootFile(0)
 , fDetectorTree(0)
+//, fTreeName("")
 {
   fNHisto      = 2;
   fVerbose     = 1;
@@ -253,6 +254,7 @@ void HistoManager::EndOfEvent()
 {
   fTotStepGas += fStepGas;
   fTotCluster += fCluster;
+  fTotEdep = std::accumulate(fEnergyOfPrim.begin(), fEnergyOfPrim.end(), 0.);
   
   G4int idx = G4int(fTotEdep*fBinsE/fMaxEnergy);
   if(idx < 0) { idx = 0; }
@@ -277,26 +279,27 @@ void HistoManager::EndOfEvent()
 
 void HistoManager::AddEnergy(G4double edep, const G4Step* step)
 {
-  if(1 < fVerbose) {
-    G4cout << "HistoManager::AddEnergy: e(keV)= " << edep/keV
-           << G4endl;
-  }
-  fTotEdep += edep;
-  if(step) {
-    if(1 == step->GetTrack()->GetTrackID()) { fStepGas += 1.0; }
-
-    fMeanCluster += fElIonPair->MeanNumberOfIonsAlongStep(step);
-    fCluster += fElIonPair->SampleNumberOfIonsAlongStep(step);
-
-    G4cout << fElIonPair->MeanNumberOfIonsAlongStep(step)/mm << G4endl;
-//    G4cout << step->GetStepLength() <<"\t"<< fElIonPair->MeanNumberOfIonsAlongStep(step) << G4endl;
-  }
+//  if(1 < fVerbose) {
+//    G4cout << "HistoManager::AddEnergy: e(keV)= " << edep/keV
+//           << G4endl;
+//  }
+//  fTotEdep += edep;
+//  if(step) {
+//    if(1 == step->GetTrack()->GetTrackID()) { fStepGas += 1.0; }
+//
+//    fMeanCluster += fElIonPair->MeanNumberOfIonsAlongStep(step);
+//    fCluster += fElIonPair->SampleNumberOfIonsAlongStep(step);
+//
+//    G4cout << fElIonPair->MeanNumberOfIonsAlongStep(step)/mm << G4endl;
+////    G4cout << step->GetStepLength() <<"\t"<< fElIonPair->MeanNumberOfIonsAlongStep(step) << G4endl;
+//  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void HistoManager::InitializeROOT()
 {
+	G4cout << "Here is ok" << G4endl;
 	G4String filename = "G4.root";
 	fRootFile = new TFile(filename, "RECREATE");
 
@@ -304,15 +307,18 @@ void HistoManager::InitializeROOT()
 		G4cout << "OutputManager::Initialize: Problem creating the ROOT TFile" << G4endl;
 		return;
 	}
+	std::string fTreeName;
+//	if (fTreeName.empty()) {
+		G4double en = ((PrimaryGeneratorAction*)G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction())->GetParticleEnergy();
+		std::stringstream s;
+		s <<  std::fixed << std::setprecision(2) << "E=" << en/MeV << "MeV";
+		fTreeName = s.str();
+//	}
 
-	G4double en = ((PrimaryGeneratorAction*)G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction())->GetParticleEnergy();
-	std::stringstream s;
-	s <<  std::fixed << std::setprecision(2) << "E=" << en/MeV << "MeV";
-	G4cout <<"============= "<< s.str() << G4endl;
-	fDetectorTree = new TTree(s.str().c_str(), "GasDetector");
+	fDetectorTree = new TTree(fTreeName.c_str(), "GasDetector");
 	fDetectorTree->Branch("dEPerTrack", &fTotEdepROOT);
 	fDetectorTree->Branch("NePerTrack_Est", &fCluster);
-	fDetectorTree->Branch("NePerTrack_StpAcn", &fNPrimElec);
+	fDetectorTree->Branch("NePerTrack_Counted", &fNPrimElec);
 	fDetectorTree->Branch("SecondaryElecronEnergy", &fEnergyOfPrim);
 }
 

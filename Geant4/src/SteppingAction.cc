@@ -37,6 +37,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
 				{
 					HistoManager* m = HistoManager::GetPointer();
 					m->AddPrimaryElectron(step->GetTotalEnergyDeposit()/eV);
+					track->GetTotalEnergy();
 					track->SetTrackStatus(fStopAndKill); // kill track
 				}
 			}
