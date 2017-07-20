@@ -19,8 +19,6 @@
 #
 #/testem/stepMax         10 mm
 #
-/testem/phys/setNbinsE 20
-/testem/phys/setMaxE 0.060  MeV
 
 /testem/histo/setRootTreeName test1234
 

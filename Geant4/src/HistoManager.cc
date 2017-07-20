@@ -81,22 +81,10 @@ HistoManager::HistoManager()
 , fMessenger(0)
 {
   // normalisation to PAI
-  fFactorALICE = 325;
+  // fFactorALICE = 325;
 
   // normalisation to Opt0
   //fFactorALICE = 275;
-
-  fEvt = 0.0;
-  fTotStepGas = 0.0;
-  fTotCluster = 0.0;
-  fMeanCluster= 0.0;
-  fOverflow   = 0.0;
-
-  fTotEdep = 0.0;
-  fStepGas = 0;
-  fCluster = 0;
-
-  fHistoBooked = false;
 
   fElIonPair = G4LossTableManager::Instance()->ElectronIonPair();
   fMessenger = new HistoMessenger(this);
@@ -113,13 +101,6 @@ HistoManager::~HistoManager()
 
 void HistoManager::BeginOfRun()
 {
-  // initilise scoring
-  fEvt = 0.0;
-  fTotStepGas = 0.0;
-  fTotCluster = 0.0;
-  fMeanCluster= 0.0;
-  fOverflow   = 0.0;
-
   InitializeROOT();
 }
 
@@ -138,12 +119,8 @@ void HistoManager::EndOfRun()
 
 void HistoManager::BeginOfEvent()
 {
-  fEvt += 1.0;
   fTotEdep = 0.0;
-  fStepGas = 0;
-  fCluster = 0;
-
-  fNPrimElec = 0.;
+  fNeCounted = 0.;
   fEnergyOfPrim.clear();
 }
 
@@ -151,13 +128,10 @@ void HistoManager::BeginOfEvent()
 
 void HistoManager::EndOfEvent()
 {
-  fTotStepGas += fStepGas;
-  fTotCluster += fCluster;
   fTotEdep = std::accumulate(fEnergyOfPrim.begin(), fEnergyOfPrim.end(), 0.);
   
   if (fDetectorTree) {
-	  fTotEdepROOT = fTotEdep/keV;
-	  fMeanClusterROOT = fMeanCluster;
+	  fTotEdep = fTotEdep/keV;
 	  fDetectorTree->Fill();
   }
 }
@@ -202,14 +176,14 @@ void HistoManager::InitializeROOT()
 	}
 
 	fDetectorTree = new TTree(fTreeName.c_str(), "GasDetector");
-	fDetectorTree->Branch("dEPerTrack", &fTotEdepROOT);
-	fDetectorTree->Branch("NePerTrack_Est", &fCluster);
-	fDetectorTree->Branch("NePerTrack_Counted", &fNPrimElec);
+	fDetectorTree->Branch("dEPerTrack", &fTotEdep);
+	fDetectorTree->Branch("NePerTrack_Estimated", &fNeEstimated);
+	fDetectorTree->Branch("NePerTrack_Counted", &fNeCounted);
 	fDetectorTree->Branch("SecondaryElecronEnergy", &fEnergyOfPrim);
 }
 
 void HistoManager::AddPrimaryElectron(G4double energy)
 {
-	fNPrimElec++;
+	fNeCounted++;
 	fEnergyOfPrim.push_back(energy);
 }
