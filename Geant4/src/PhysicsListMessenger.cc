@@ -53,12 +53,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PhysicsListMessenger::PhysicsListMessenger(PhysicsList* pPhys)
-:G4UImessenger(),fPhysicsList(pPhys),
- fECmd(0),
- fEBCmd(0),
- fCBCmd(0),
- fListCmd(0),
- fADCCmd(0)
+:G4UImessenger(),fPhysicsList(pPhys)
+, fListCmd(0)
 {   
   fListCmd = new G4UIcmdWithAString("/testem/phys/addPhysics",this);  
   fListCmd->SetGuidance("Add modula physics list.");
@@ -70,11 +66,7 @@ PhysicsListMessenger::PhysicsListMessenger(PhysicsList* pPhys)
 
 PhysicsListMessenger::~PhysicsListMessenger()
 {
-  delete fECmd;
-  delete fEBCmd;
-  delete fCBCmd;
   delete fListCmd;
-  delete fADCCmd; 
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -83,20 +75,8 @@ void PhysicsListMessenger::SetNewValue(G4UIcommand* command,
                                           G4String newValue)
 {       
   HistoManager* man = HistoManager::GetPointer();
-//  if( command == fECmd )
-//   { man->SetMaxEnergy(fECmd->GetNewDoubleValue(newValue)); }
-//
-//  if( command == fEBCmd )
-//   { man->SetNumberBins(fEBCmd->GetNewIntValue(newValue)); }
-//
-//  if( command == fCBCmd )
-//   { man->SetNumberBinsCluster(fCBCmd->GetNewIntValue(newValue)); }
 
-  if( command == fListCmd )
-   { fPhysicsList->AddPhysicsList(newValue); }
-
-//  if( command == fADCCmd )
-//    { man->SetEnergyPerChannel(fADCCmd->GetNewDoubleValue(newValue)); }
+  if( command == fListCmd ) fPhysicsList->AddPhysicsList(newValue);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
