@@ -71,7 +71,7 @@ StackingAction::ClassifyNewTrack(const G4Track* aTrack)
   
   // charged tracks are killed only inside sensitive volumes
   if(aTrack->GetVolume()->GetLogicalVolume()->GetSensitiveDetector() &&
-     aTrack->GetDefinition()->GetPDGCharge() != 0.0) 
+     aTrack->GetDefinition()->GetPDGCharge() < 0.0)
     {
 //      fHisto->AddEnergy(aTrack->GetKineticEnergy(), 0);
       fHisto->AddPrimaryElectron(aTrack->GetKineticEnergy());
