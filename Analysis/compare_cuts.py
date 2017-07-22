@@ -1,6 +1,7 @@
 import ROOT as r
 
-from SystemOfUnits import * 
+from SystemOfUnits import *
+from fig2LaTeX import halfwidth, fullwidth 
 from __builtin__ import raw_input
 
 
@@ -40,7 +41,6 @@ def get_hist(distribution,
 
 
 def plot_comparison():
-    c1 = r.TCanvas("c", "c", 50, 50, 900, 600)
     f = r.TFile("../Geant4/Results/cut_scan.root")
     ttree_names = [t.GetName() for t in f.GetListOfKeys() if t.GetName().startswith("Lcut=") and t.GetName().endswith("eV")]
     
@@ -53,6 +53,8 @@ def plot_comparison():
     
     f_heed = r.TFile("../Heed/Results.root")
     hists.append(get_hist(get_G4_distribution(f_heed, "E=3.00MeV"), name="HEED", color=i+5))
+    
+    c1, hists[0] = fullwidth(hists[0])
     
     # Titles
     hists[0].Draw()
@@ -71,8 +73,11 @@ def plot_comparison():
         legend.AddEntry(h, h.GetName(), "l");
     legend.Draw();
     
+#     c1, hists[0] = halfpage(hists[0])
+    
     r.gStyle.SetOptStat(0)
-    hists[0].SetTitle("Energy deposit by 3 MeV electrons in 56 mm of He/isoButane 80/20")
+    hists[0].SetTitle("")
+#     hists[0].SetTitle("Energy deposit by 3 MeV electrons in 56 mm of He/isoButane 80/20")
     c1.Update()
     
     raw_input("Press ENTER to stop the script")
