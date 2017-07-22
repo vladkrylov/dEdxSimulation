@@ -84,7 +84,7 @@ def plot_comparison(energy, linlogY=LIN):
     
     c1.SetGrid()
     if linlogY == LOG:
-        c1.Setlogy()
+        c1.SetLogy()
     
     # Legend
     legend = r.TLegend(0.65,0.5,0.9,0.9);
