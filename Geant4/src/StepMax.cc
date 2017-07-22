@@ -40,7 +40,7 @@
 
 StepMax::StepMax(const G4String& processName)
   : G4VDiscreteProcess(processName),
-    fMaxChargedStep(10.*mm),
+    fMaxChargedStep(MAXFLOAT),
     fMessenger(0)
 {
   fMessenger = new StepMaxMessenger(this);

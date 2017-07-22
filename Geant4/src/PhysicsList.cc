@@ -54,8 +54,10 @@
 #include "G4EmPenelopePhysics.hh"
 #include "G4DecayPhysics.hh"
 
+#include "G4PAIySection.hh"
 #include "G4PAIModel.hh"
 #include "G4PAIPhotModel.hh"
+#include "G4PAIModelData.hh"
 
 #include "G4Gamma.hh"
 #include "G4Electron.hh"
@@ -222,7 +224,7 @@ void PhysicsList::AddStepMax()
 
 void PhysicsList::SetCuts()
 {
-  G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(100.*eV,100*MeV);
+//  G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(50.*eV,100*MeV);
   if ( verboseLevel > 0 )
   {
     G4cout << "PhysicsList::SetCuts:";

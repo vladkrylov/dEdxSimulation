@@ -72,6 +72,8 @@ public:
   void SetContainerThickness(G4double);     
 
   void SetPairEnergy(G4double);
+
+  G4VPhysicalVolume* GetDetectorVolume() {return fPhysDetector;};
      
 private:
 

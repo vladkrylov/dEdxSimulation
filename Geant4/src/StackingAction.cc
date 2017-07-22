@@ -67,14 +67,16 @@ StackingAction::ClassifyNewTrack(const G4Track* aTrack)
   G4ClassificationOfNewTrack status = fUrgent;
 
   //keep primary particle
-  if (aTrack->GetParentID() == 0 || !fKillSecondary) { return status; }
+  if (aTrack->GetParentID() == 0) { return status; }
   
   // charged tracks are killed only inside sensitive volumes
   if(aTrack->GetVolume()->GetLogicalVolume()->GetSensitiveDetector() &&
-     aTrack->GetDefinition()->GetPDGCharge() != 0.0) 
+     aTrack->GetDefinition()->GetPDGCharge() < 0.0)
     {
-      fHisto->AddEnergy(aTrack->GetKineticEnergy(), 0); 
-      status = fKill;    
+//      fHisto->AddEnergy(aTrack->GetKineticEnergy(), 0);
+      fHisto->AddPrimaryElectron(aTrack->GetKineticEnergy());
+
+      if (fKillSecondary) status = fKill;
     }
   return status;
 }

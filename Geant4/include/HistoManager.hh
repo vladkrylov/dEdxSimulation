@@ -49,6 +49,9 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
+#include <vector>
+#include <string>
+
 #include "globals.hh"
 #include "G4DataVector.hh"
 #include "G4StatDouble.hh"
@@ -57,9 +60,9 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-class Histo;
 class G4Step;
 class G4ElectronIonPair;
+class HistoMessenger;
 
 class TFile;
 class TH1D;
@@ -88,84 +91,38 @@ public: // Without description
 
   void InitializeROOT();
   void AddEnergy(G4double edep, const G4Step*);
+  void AddPrimaryElectron(G4double energy);
 
-  inline void SetMaxEnergy(G4double value);
-
-  inline void SetNumberBins(G4int value);
-
-  inline void SetNumberBinsCluster(G4int value);
-
-  inline void SetEnergyPerChannel(G4double value);
-
-  inline void SetVerbose(G4int value);
-
-  inline G4int GetVerbose() const;
+  inline void SetTreeName(const std::string& name);
+  inline void SetRootFileName(const std::string& name);
 
 private:
 
   // MEMBERS
   static HistoManager* fManager;
+  HistoMessenger* fMessenger;
 
-  G4int fNHisto;
-  G4int fVerbose;
-
-  G4double fMaxEnergy;
-  G4double fStepGas;
-  G4double fCluster;
-  G4double fTotStepGas;
-  G4double fTotCluster;
-  G4double fMeanCluster;
-  G4double fFactorALICE;
-  G4double fEvt;
-
-  G4int fBinsE; 
-  G4int fBinsCluster;
-
-  G4bool fHistoBooked;
-
-  G4double fTotEdep;
-  G4StatDouble fEdep;
-  G4double fOverflow;
-  G4DataVector fEgas;
-
-  Histo*   fHisto;
   G4ElectronIonPair* fElIonPair;
 
   // ROOT
-  G4double fTotEdepROOT;
-  G4double fMeanClusterROOT;
+  G4double fTotEdep;
+  G4double fNeEstimated;
+  G4double fNeCounted;
+  std::vector<G4double> fEnergyOfPrim;
   TFile*   fRootFile;
   TTree*   fDetectorTree;
+  std::string fTreeName;
+  std::string fRootFileName;
 };
 
-inline void HistoManager::SetMaxEnergy(G4double value)
+inline void HistoManager::SetTreeName(const std::string& name)
 {
-  fMaxEnergy = value;
+  fTreeName = name;
 }
 
-inline void HistoManager::SetNumberBins(G4int value)
+inline void HistoManager::SetRootFileName(const std::string& name)
 {
-  fBinsE = value;
-}
-
-inline void HistoManager::SetNumberBinsCluster(G4int value)
-{
-  fBinsCluster = value;
-}
-
-inline void HistoManager::SetEnergyPerChannel(G4double value)
-{
-  if(value > 0.0) { fFactorALICE = 1./value; }
-}
-
-inline void HistoManager::SetVerbose(G4int value)
-{
-  fVerbose = value;
-}
-
-inline G4int HistoManager::GetVerbose() const
-{
-  return fVerbose;
+  fRootFileName = name;
 }
 
 #endif
