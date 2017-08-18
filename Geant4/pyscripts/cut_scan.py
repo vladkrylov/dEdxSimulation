@@ -4,7 +4,7 @@ from change_parameter import change_parameter
 from logistics import *
 from SystemOfUnits import *
 
-SCAN_RESULTS_FILE = os.path.join(get_proj_dir(), "Results/cut_scan.root")
+SCAN_RESULTS_FILE = os.path.join(get_proj_dir(), "Results/ArC02_70_30_w=28eV_cut_scan.root")
 
 def clean_existing_results():
     if os.path.isfile(SCAN_RESULTS_FILE):

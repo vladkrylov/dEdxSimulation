@@ -85,6 +85,7 @@ void LRun::Generate()
 	// Make a medium
 	MediumMagboltz* gas = new MediumMagboltz();
 	gas->SetComposition("he", 80., "isobutane", 20.);
+//	gas->SetComposition("ar", 70., "co2", 30.);
 	gas->SetTemperature(293.15);
 	gas->SetPressure(760.);
 

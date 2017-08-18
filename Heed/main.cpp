@@ -17,7 +17,7 @@ double E2K(double energy);
 
 int main(int argc, char * argv[])
 {
-	double eStarEnrgs[] = {0.10, 0.125, 0.15, 2.489};
+	double eStarEnrgs[] = {0.100, 0.500, 1., 1.5, 2., 3.};
 //	double eStarEnrgs[] = {0.10, 0.125, 0.15, 0.175, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.70, 0.80, 0.90, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4, 4.5, 5};
 	size_t nEStar = sizeof(eStarEnrgs) / sizeof(double);
 

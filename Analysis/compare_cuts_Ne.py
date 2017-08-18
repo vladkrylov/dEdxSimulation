@@ -43,7 +43,7 @@ def get_hist(distribution,
              color=r.kRed,
              line_width=2
              ):
-    nbins = 1200
+    nbins = 600
     h_min = 0
     h_max = nbins
     h = r.TH1F(name, name, nbins, h_min, h_max)
@@ -51,14 +51,16 @@ def get_hist(distribution,
         h.Fill(x)
     
     # attributes
+    if color == 5:
+        color = r.kYellow + 1
     h.SetLineColor(color)
     h.SetLineWidth(line_width)
     
     return h.Clone()
 
 
-def plot_comparison():
-    f = r.TFile("../Geant4/Results/cut_scan.root")
+def plot_comparison(G4_res_file, heed_res_file):
+    f = r.TFile(G4_res_file)
     ttree_names = [t.GetName() for t in f.GetListOfKeys() if t.GetName().startswith("Lcut=") and t.GetName().endswith("eV")]
     
     hists = []
@@ -68,8 +70,8 @@ def plot_comparison():
         h = get_hist(d, name=h_name, color=i+2)
         hists.append(h)
     
-    f_heed = r.TFile("../Heed/Results.root")
-    hists.append(get_hist(get_Heed_distribution(f_heed, "E=3.00MeV"), name="HEED", color=i+5))
+    f_heed = r.TFile(heed_res_file)
+    hists.append(get_hist(get_Heed_distribution(f_heed, "E=3.511MeV"), name="HEED", color=i+5))
     
     c1, hists[0] = fullwidth(hists[0])
     
@@ -101,7 +103,16 @@ def plot_comparison():
      
     
 if __name__ == "__main__":
-    plot_comparison()
+#     Geant4_results_file = "../Geant4/Results/cut_scan.root"
+#     Heed_results_file = "../Heed/Results/HeiBtn_80_20.root"
+    
+#     Geant4_results_file = "../Geant4/Results/ArC02_70_30_cut_scan.root"
+#     Heed_results_file = "../Heed/Results/ArCO2_70_30.root"
+     
+    Geant4_results_file = "../Geant4/Results/ArC02_70_30_w=28eV_cut_scan.root"
+    Heed_results_file = "../Heed/Results/ArCO2_70_30.root"
+    
+    plot_comparison(Geant4_results_file, Heed_results_file)
 
 
 

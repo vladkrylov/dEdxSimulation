@@ -136,7 +136,7 @@ void DetectorConstruction::DefineMaterials()
   // 
   // gases at STP conditions
   //
-  CarbonDioxide = manager->FindOrBuildMaterial("G4_CARBON_DIOXIDE");
+  CO2 = manager->FindOrBuildMaterial("G4_CARBON_DIOXIDE");
   G4Material* Mylar  = manager->FindOrBuildMaterial("G4_MYLAR");
   Methane= manager->FindOrBuildMaterial("G4_METHANE");
   Propane= manager->FindOrBuildMaterial("G4_PROPANE");
@@ -200,21 +200,21 @@ void DetectorConstruction::DefineMaterials()
   G4Material* Ar_80CO2_20 = new G4Material(name="ArCO2"  , density, 
                                            ncomponents=2);
   Ar_80CO2_20->AddMaterial( Ar,           fractionmass = 0.783 ) ;
-  Ar_80CO2_20->AddMaterial( CarbonDioxide,   fractionmass = 0.217 ) ;
+  Ar_80CO2_20->AddMaterial( CO2,   fractionmass = 0.217 ) ;
 
   // 80% Xe + 20% CO2, STP
   density = 5.0818*mg/cm3 ;      
   G4Material* Xe20CO2 = new G4Material(name="Xe20CO2", density, 
                                        ncomponents=2);
   Xe20CO2->AddMaterial( Xe,            fractionmass = 0.922 ) ;
-  Xe20CO2->AddMaterial( CarbonDioxide, fractionmass = 0.078 ) ;
+  Xe20CO2->AddMaterial( CO2, fractionmass = 0.078 ) ;
 
   // 80% Kr + 20% CO2, STP
   density = 3.601*mg/cm3 ;      
   G4Material* Kr20CO2 = new G4Material(name="Kr20CO2"  , density, 
                                        ncomponents=2);
   Kr20CO2->AddMaterial( Kr,            fractionmass = 0.89 ) ;
-  Kr20CO2->AddMaterial( CarbonDioxide, fractionmass = 0.11 ) ;
+  Kr20CO2->AddMaterial( CO2, fractionmass = 0.11 ) ;
 
   // ALICE mixture TPC_Ne-CO2-2
   density = 0.939*mg/cm3 ;      
@@ -236,13 +236,13 @@ void DetectorConstruction::DefineMaterials()
   HeIsoBut->AddMaterial( He,            fractionmass = 0.216 ) ;
   HeIsoBut->AddMaterial( IsoBut,        fractionmass = 0.784 ) ;
 
-  G4Material* testAr_80CO2_20 = ConstructGasMixture2(Ar, CarbonDioxide, 80, 20);
+  G4Material* testAr_80CO2_20 = ConstructGasMixture2(Ar, CO2, 80, 20);
   G4cout << "Example/Constructed:" << G4endl;
   G4cout << "density: " << Ar_80CO2_20->GetDensity()/mg/cm3 << " mg/cm3 / " << testAr_80CO2_20->GetDensity()/mg/cm3 << " mg/cm3 " << G4endl;
   for(int i=0; i < Ar_80CO2_20->GetNumberOfElements(); i++)
 	  G4cout << "fraction of material " << i << ": " << Ar_80CO2_20->GetFractionVector()[i] << " / " << testAr_80CO2_20->GetFractionVector()[i] << G4endl;
 
-  fGasMat = HeIsoBut;
+  fGasMat = Ar_80CO2_20;
   fWindowMat = Mylar;
   fWorldMaterial = empty; 
 
@@ -273,18 +273,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   fPrimaryGenerator->SetPositionZ(-0.55*contThick);
 
-  // Printout parameters
-  G4cout << "\n The  WORLD   is made of " 
-         << worldSizeZ/mm << "mm of " << fWorldMaterial->GetName() ;
-  G4cout << ", the transverse size (R) of the world is " << worldSizeR/mm 
-         << " mm. " << G4endl;
-  G4cout << " The CONTAINER is made of " 
-         << fWindowThick/mm << "mm of " << fWindowMat->GetName() << G4endl;
-  G4cout << " The TARGET is made of " 
-         << fGasThickness/mm << "mm of " << fGasMat->GetName() ;
-  G4cout << ", the transverse size (R) is " << fGasRadius/mm << " mm. " 
-         << G4endl;
-  G4cout << G4endl;
       
   // World
   G4Tubs* SolidWorld = new G4Tubs("World",                             
@@ -314,12 +302,23 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Tubs* det = new G4Tubs("Gas", 0., fGasRadius, fGasThickness/2.,
                                   0., CLHEP::twopi); 
 
-//  fGasMat = ConstructGasMixture2(He, IsoBut, 80, 20);
-  fLogicDet = new G4LogicalVolume(det, fGasMat, "Gas"); 
+//   // 70% Ar + 30% CO2, STP
+//  G4double density = 1.8223*mg/cm3 ;
+//  G4double fractionmass;
+//  G4int ncomponents;
+//  G4String name;
+//  G4Material* Ar_70CO2_30 = new G4Material(name="ArCO27030"  , density,
+//                                           ncomponents=2);
+//  Ar_70CO2_30->AddMaterial( Ar,           fractionmass = 0.783 ) ;
+//  Ar_70CO2_30->AddMaterial( CarbonDioxide,   fractionmass = 0.217 ) ;
+//  fGasMat = Ar_70CO2_30;
 
-//  fPhysDetector = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), "Gas", fLogicDet, PhysWind, false, 0);
+  fGasMat = ConstructGasMixture2(Ar, CO2, 70, 30);
+  SetPairEnergy(280*eV);
+//  fGasMat->GetIonisation()->Get;
+
+  fLogicDet = new G4LogicalVolume(det, fGasMat, "Gas");
   fPhysDetector = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), "Gas", fLogicDet, fPhysWorld, false, 0);
-
   fRegGasDet->AddRootLogicalVolume(fLogicDet);
 
   // Sensitive Detectors:
@@ -338,9 +337,21 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4VisAttributes* color2 = new G4VisAttributes(G4Colour(0.0, 0.3, 0.7));
   fLogicDet->SetVisAttributes(color2);
 
-  if(0.0 == fGasMat->GetIonisation()->GetMeanEnergyPerIonPair()) {
-    SetPairEnergy(20*eV);
-  }
+
+
+  // Printout parameters
+  G4cout << "\n The  WORLD   is made of "
+         << worldSizeZ/mm << "mm of " << fWorldMaterial->GetName() ;
+  G4cout << ", the transverse size (R) of the world is " << worldSizeR/mm
+         << " mm. " << G4endl;
+  G4cout << " The CONTAINER is made of "
+         << fWindowThick/mm << "mm of " << fWindowMat->GetName() << G4endl;
+  G4cout << " The TARGET is made of "
+         << fGasThickness/mm << "mm of " << fGasMat->GetName() ;
+  G4cout << ", the transverse size (R) is " << fGasRadius/mm << " mm. "
+         << G4endl;
+  G4cout << G4endl;
+
   return fPhysWorld;
 }
 

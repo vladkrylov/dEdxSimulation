@@ -83,7 +83,7 @@ private:
   G4Material* Ar;
   G4Material* Kr;
   G4Material* Xe;
-  G4Material* CarbonDioxide;
+  G4Material* CO2;
   G4Material* Methane;
   G4Material* Propane;
   G4Material* empty;
