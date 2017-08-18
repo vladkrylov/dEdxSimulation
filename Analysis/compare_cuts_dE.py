@@ -4,16 +4,16 @@ from SystemOfUnits import *
 from fig2LaTeX import halfwidth, fullwidth 
 from __builtin__ import raw_input
 
-
-def get_G4_resfile(model):
-    return "../Geant4/Results/3MeV/G4" + model.lower() + ".root"
-
-
 def get_G4_distribution(tfile, ttree_name):
     dist = []
     tree = tfile.Get(ttree_name)
+    counter = 0
     for event in tree:
-        dist.append(event.dEPerTrack)
+        counter += 1
+        try:
+            dist.append(event.dEPerTrack)
+        except:
+            pass
         
     if len(dist) == 0:
         print "No data found for Geant4 distribution"
