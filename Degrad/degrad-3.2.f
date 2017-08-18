@@ -22527,10 +22527,24 @@ C
 C  --------------------------------------------       
 C                                                                       
 C      READ IN OUTPUT CONTROL AND INTEGRATION DATA                      
-C                                                                       
-      READ(5,2) NGAS,NEVENT,IMIP,NDVEC,NSEED,ESTART,ETHRM,ECUT    
+C                                             
+      READ(5,2) NGAS,NEVENT,IMIP,NDVEC,NSEED,ESTART,ETHRM,ECUT
     2 FORMAT(5I10,3F10.5)  
       ICOUNT=0
+      WRITE(6,663) NEVENT
+  663 FORMAT('NEVENT = ',I10)
+      WRITE(6,662) IMIP
+  662 FORMAT('IMIP = ',I10)
+      WRITE(6,661) NDVEC
+  661 FORMAT('NDVEC = ',I10)
+      WRITE(6,660) NSEED
+  660 FORMAT('NSEED = ',I10)
+      WRITE(6,659) ESTART
+  659 FORMAT('ESTART = ',F15.5)
+      WRITE(6,658) ETHRM
+  658 FORMAT('ETHRM = ',F10.5)
+      WRITE(6,657) ECUT
+  657 FORMAT('ECUT = ',F10.5)
       IF(IMIP.EQ.1) ICOUNT=1 
       IF(NGAS.EQ.0) GO TO 99 
       IF(ESTART.GT.3.0D6.AND.IMIP.EQ.3) THEN
@@ -22555,22 +22569,77 @@ C
 C   GAS IDENTIFIERS 
 C
       READ(5,3) NGASN(1),NGASN(2),NGASN(3),NGASN(4),NGASN(5),NGASN(6)
-    3 FORMAT(6I5)        
+    3 FORMAT(6I5)    
+      WRITE(6,656) NGASN(1)
+  656 FORMAT('NGASN(1) = ',I5)
+      WRITE(6,655) NGASN(2)
+  655 FORMAT('NGASN(2) = ',I5)
+      WRITE(6,654) NGASN(3)
+  654 FORMAT('NGASN(3) = ',I5)
+      WRITE(6,653) NGASN(4)
+  653 FORMAT('NGASN(4) = ',I5)
+      WRITE(6,652) NGASN(5)
+  652 FORMAT('NGASN(5) = ',I5)
+      WRITE(6,651) NGASN(6)
+  651 FORMAT('NGASN(6) = ',I5)
 C      
 C      GAS PARAMETERS
 C
       READ(5,4) FRAC(1),FRAC(2),FRAC(3),FRAC(4),FRAC(5),FRAC(6),TEMPC,
      /TORR                        
-    4 FORMAT(8F10.4)      
+    4 FORMAT(8F10.4)
+      WRITE(6,650) FRAC(1)
+  650 FORMAT('FRAC(1) = ',F10.4)
+      WRITE(6,649) FRAC(2)
+  649 FORMAT('FRAC(2) = ',F10.4)
+      WRITE(6,648) FRAC(3)
+  648 FORMAT('FRAC(3) = ',F10.4)
+      WRITE(6,647) FRAC(4)
+  647 FORMAT('FRAC(4) = ',F10.4)
+      WRITE(6,646) FRAC(5)
+  646 FORMAT('FRAC(5) = ',F10.4)
+      WRITE(6,645) FRAC(6)
+  645 FORMAT('FRAC(6) = ',F10.4)
+      WRITE(6,629) TEMPC
+  629 FORMAT('TEMPC = ',F10.4,' Celcius degrees')
+      WRITE(6,628) TORR
+  628 FORMAT('TORR = ',F10.4,' TORR')
 C                                                  
 C      FIELD VALUES                                                    
 C                                                                       
       READ(5,5) EFIELD,BMAG,BTHETA,IWRITE,IPEN                         
     5 FORMAT(3F10.3,2I5)
+      WRITE(6,644) EFIELD
+  644 FORMAT('EFIELD = ',F10.3)
+      WRITE(6,643) BMAG
+  643 FORMAT('BMAG = ',F10.3)
+      WRITE(6,642) BTHETA
+  642 FORMAT('BTHETA = ',F10.3)
+      WRITE(6,641) IWRITE
+  641 FORMAT('IWRITE = ',I5)
+      WRITE(6,640) IPEN
+  640 FORMAT('IPEN = ',I5)
       READ(5,6) DETEFF,EXCWGHT,KGAS,LGAS,ICMP,IRAY,IPAP,IBRM,IECASC 
     6 FORMAT(2F10.3,7I5)
-C     WRITE(6,656) IWRITE
-C 656 FORMAT(' IWRITE=',I3)  
+      WRITE(6,639) DETEFF
+  639 FORMAT('DETEFF = ',F10.3)
+      WRITE(6,638) EXCWGHT
+  638 FORMAT('EXCWGHT = ',F10.3)
+      WRITE(6,637) KGAS
+  637 FORMAT('KGAS = ',I5)
+      WRITE(6,636) LGAS
+  636 FORMAT('LGAS = ',I5)
+      WRITE(6,635) ICMP
+  635 FORMAT('ICMP = ',I5)
+      WRITE(6,634) IRAY
+  634 FORMAT('IRAY = ',I5)
+      WRITE(6,633) IPAP
+  633 FORMAT('IPAP = ',I5)
+      WRITE(6,632) IBRM
+  632 FORMAT('IBRM = ',I5)
+      WRITE(6,631) IECASC
+  631 FORMAT('IECASC = ',I5)
+
       IF(IWRITE.NE.0) OPEN(UNIT=50,FILE='DEGRAD.OUT')
 C CALCULATE EFINAL FOR DELTAS OR XRAYS 
 C INCREASED EFINAL CAUSED BY ELECTRIC FIELD 

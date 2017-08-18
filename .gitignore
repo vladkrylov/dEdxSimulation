@@ -11,12 +11,14 @@ Heed/Release
 Degrad/degrad
 
 *.root
+
 !Geant4/Results/cut_scan.root
 !Heed/Results/HeiBtn_80_20.root
 !Geant4/Results/ArC02_70_30_cut_scan.root
 !Heed/Results/ArCO2_70_30.root
 !Geant4/Results/ArC02_70_30_w=28eV_cut_scan.root
 !Heed/Results/ArCO2_70_30.root
+
 *.zip
 *.properties
 *.log
