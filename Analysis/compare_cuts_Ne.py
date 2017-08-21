@@ -109,9 +109,18 @@ if __name__ == "__main__":
 #     Geant4_results_file = "../Geant4/Results/ArC02_70_30_cut_scan.root"
 #     Heed_results_file = "../Heed/Results/ArCO2_70_30.root"
      
-    Geant4_results_file = "../Geant4/Results/ArC02_70_30_w=28eV_cut_scan.root"
-    Heed_results_file = "../Heed/Results/ArCO2_70_30.root"
-    
+#     Geant4_results_file = "../Geant4/Results/ArC02_70_30_w=28eV_cut_scan.root"
+#     Heed_results_file = "../Heed/Results/ArCO2_70_30.root"
+
+#     Geant4_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Geant4/ArCO2_70_30.root"
+#     Heed_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Heed/ArCO2_70_30.root"
+
+#     Geant4_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Geant4/HeiBtn_80_20.root"
+#     Heed_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Heed/HeiBtn_80_20.root"
+
+    Geant4_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Geant4/HeiBtn_80_20.root"
+    Heed_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Heed/HeiBtn_80_20.root"
+        
     plot_comparison(Geant4_results_file, Heed_results_file)
 
 

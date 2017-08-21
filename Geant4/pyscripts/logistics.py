@@ -123,7 +123,7 @@ def run2file(target_file, mode="update", tree_name=None):
 
 
 def set_energy(en):
-    change_parameter(run_mac(), "/gun/energy", "%.2f MeV" % (en))
+    change_parameter(run_mac(), "/gun/energy", "%.2f MeV" % (en/MeV))
 
 
 def set_phys_model(m):

@@ -54,7 +54,7 @@ def plot_comparison(G4_res_file, heed_res_file):
         hists.append(h)
     
     f_heed = r.TFile(heed_res_file)
-    hists.append(get_hist(get_G4_distribution(f_heed, "E=3.511MeV"), name="HEED", color=i+5))
+    hists.append(get_hist(get_G4_distribution(f_heed, "E=1.511MeV"), name="HEED", color=i+5))
     
     c1, hists[0] = fullwidth(hists[0])
     
@@ -62,6 +62,7 @@ def plot_comparison(G4_res_file, heed_res_file):
     hists[0].Draw()
     hists[0].GetXaxis().SetTitle("Deposit energy, keV")
     hists[0].GetYaxis().SetTitle("Counts / %.2f keV" % hists[0].GetBinWidth(0))
+    hists[0].SetMaximum(200);
     
     for i in range(1, len(hists)):
         hists[i].Draw("same")
@@ -92,8 +93,17 @@ if __name__ == "__main__":
 #     Geant4_results_file = "../Geant4/Results/ArC02_70_30_cut_scan.root"
 #     Heed_results_file = "../Heed/Results/ArCO2_70_30.root"
      
-    Geant4_results_file = "../Geant4/Results/ArC02_70_30_w=28eV_cut_scan.root"
-    Heed_results_file = "../Heed/Results/ArCO2_70_30.root"
+#     Geant4_results_file = "../Geant4/Results/ArC02_70_30_w=28eV_cut_scan.root"
+#     Heed_results_file = "../Heed/Results/ArCO2_70_30.root"
+
+#     Geant4_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Geant4/ArCO2_70_30.root"
+#     Heed_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Heed/ArCO2_70_30.root"
+    
+#     Geant4_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Geant4/HeiBtn_80_20.root"
+#     Heed_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Heed/HeiBtn_80_20.root"
+
+    Geant4_results_file = "../Geant4/Results/HeiBut_80_20_E=1MeV_cut_scan.root"
+    Heed_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Heed/HeiBtn_80_20.root"
 
     plot_comparison(Geant4_results_file, Heed_results_file)
 

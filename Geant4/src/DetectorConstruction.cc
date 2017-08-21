@@ -242,7 +242,6 @@ void DetectorConstruction::DefineMaterials()
   for(int i=0; i < Ar_80CO2_20->GetNumberOfElements(); i++)
 	  G4cout << "fraction of material " << i << ": " << Ar_80CO2_20->GetFractionVector()[i] << " / " << testAr_80CO2_20->GetFractionVector()[i] << G4endl;
 
-  fGasMat = Ar_80CO2_20;
   fWindowMat = Mylar;
   fWorldMaterial = empty; 
 
@@ -314,6 +313,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 //  fGasMat = Ar_70CO2_30;
 
   fGasMat = ConstructGasMixture2(Ar, CO2, 70, 30);
+//  fGasMat = ConstructGasMixture2(He, IsoBut, 80, 20);
   SetPairEnergy(280*eV);
 //  fGasMat->GetIonisation()->Get;
 
