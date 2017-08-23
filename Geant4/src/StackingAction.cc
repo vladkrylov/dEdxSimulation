@@ -44,7 +44,7 @@
 
 StackingAction::StackingAction()
   : G4UserStackingAction(),
-    fKillSecondary(false),
+    fKillSecondary(true),
     fStackMessenger(0),
     fHisto(HistoManager::GetPointer())
 {

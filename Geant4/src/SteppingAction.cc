@@ -28,19 +28,19 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
 	const G4ParticleDefinition* particle = track->GetParticleDefinition();
 //	Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
 
-	// gas conversion
-	if (preVolume == detectorVolume) {
-		if (track->GetCurrentStepNumber() == 1) { // creation
-			if (track->GetParentID() == 1) { // only secondaries
-				if (particle->GetParticleType() == "lepton"  // only electrons
-					&& track->GetCreatorProcess()->GetProcessName() == "eIoni")
-				{
-					HistoManager* m = HistoManager::GetPointer();
-					m->AddPrimaryElectron(step->GetTotalEnergyDeposit()/eV);
-					track->GetTotalEnergy();
-					track->SetTrackStatus(fStopAndKill); // kill track
-				}
-			}
-		}
-	}
+//	// gas conversion
+//	if (preVolume == detectorVolume) {
+//		if (track->GetCurrentStepNumber() == 1) { // creation
+//			if (track->GetParentID() == 1) { // only secondaries
+//				if (particle->GetParticleType() == "lepton"  // only electrons
+//					&& track->GetCreatorProcess()->GetProcessName() == "eIoni")
+//				{
+//					HistoManager* m = HistoManager::GetPointer();
+//					m->AddPrimaryElectron(step->GetTotalEnergyDeposit()/eV);
+//					track->GetTotalEnergy();
+//					track->SetTrackStatus(fStopAndKill); // kill track
+//				}
+//			}
+//		}
+//	}
 }
