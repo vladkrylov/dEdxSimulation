@@ -66,8 +66,8 @@ void TargetSD::Initialize(G4HCofThisEvent*)
 
 G4bool TargetSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-//  G4double edep = aStep->GetTotalEnergyDeposit();
-//  fHisto->AddEnergy(edep, aStep);
+  G4double edep = aStep->GetTotalEnergyDeposit();
+  fHisto->AddPrimaryElectron(edep);
   return true;
 }
 

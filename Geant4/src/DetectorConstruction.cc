@@ -80,7 +80,8 @@ DetectorConstruction::DetectorConstruction(PrimaryGeneratorAction* p)
     fDetectorMessenger(0), fTargetSD(0), fGasDetectorCuts(0),
     fRegGasDet(0), fPrimaryGenerator(p)
 {
-  fGasThickness = 14.*mm*4;
+//  fGasThickness = 14.*mm*4;
+  fGasThickness = 10.*mm;
   fGasRadius    = 10.*cm;
 
   fWindowThick  = 51.0*micrometer;
@@ -287,34 +288,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                  false,                   //no boolean operation
                                  0);                      //copy number
 
-//  // Window
-//  G4Tubs* wind = new G4Tubs("Absorber",
-//                            0.,contR,contThick/2.,0.,CLHEP::twopi);
-//
-//  fLogicWind = new G4LogicalVolume(wind, fWindowMat, "Window");
-//
-//  G4PVPlacement* PhysWind = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.),
-//                                          "Window",  fLogicWind,
-//					  fPhysWorld, false, 0);
-                                        
   // Detector volume
   G4Tubs* det = new G4Tubs("Gas", 0., fGasRadius, fGasThickness/2.,
                                   0., CLHEP::twopi); 
 
-//   // 70% Ar + 30% CO2, STP
-//  G4double density = 1.8223*mg/cm3 ;
-//  G4double fractionmass;
-//  G4int ncomponents;
-//  G4String name;
-//  G4Material* Ar_70CO2_30 = new G4Material(name="ArCO27030"  , density,
-//                                           ncomponents=2);
-//  Ar_70CO2_30->AddMaterial( Ar,           fractionmass = 0.783 ) ;
-//  Ar_70CO2_30->AddMaterial( CarbonDioxide,   fractionmass = 0.217 ) ;
-//  fGasMat = Ar_70CO2_30;
-
   fGasMat = ConstructGasMixture2(Ar, CO2, 70, 30);
 //  fGasMat = ConstructGasMixture2(He, IsoBut, 80, 20);
-  SetPairEnergy(280*eV);
+//  SetPairEnergy(280*eV);
 //  fGasMat->GetIonisation()->Get;
 
   fLogicDet = new G4LogicalVolume(det, fGasMat, "Gas");

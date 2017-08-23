@@ -47,11 +47,14 @@ def plot_comparison(G4_res_file, heed_res_file):
     ttree_names = [t.GetName() for t in f.GetListOfKeys() if t.GetName().startswith("Lcut=") and t.GetName().endswith("eV")]
     
     hists = []
+    means_plot_data = [] 
     for i in range(len(ttree_names)):
         d = get_G4_distribution(f, ttree_names[i])
         h_name = "Low cut = %s eV" % ttree_names[i][5:-2]
         h = get_hist(d, name=h_name, color=i+2)
         hists.append(h)
+        
+        means_plot_data.append((int(ttree_names[i][5:-2]), h.GetMean()))
     
     f_heed = r.TFile(heed_res_file)
     hists.append(get_hist(get_G4_distribution(f_heed, "E=1.511MeV"), name="HEED", color=i+5))
@@ -60,9 +63,9 @@ def plot_comparison(G4_res_file, heed_res_file):
     
     # Titles
     hists[0].Draw()
-    hists[0].GetXaxis().SetTitle("Deposit energy, keV")
+    hists[0].GetXaxis().SetTitle("Primary ionization energy [keV]")
     hists[0].GetYaxis().SetTitle("Counts / %.2f keV" % hists[0].GetBinWidth(0))
-    hists[0].SetMaximum(200);
+#     hists[0].SetMaximum(90);
     
     for i in range(1, len(hists)):
         hists[i].Draw("same")
@@ -80,9 +83,19 @@ def plot_comparison(G4_res_file, heed_res_file):
     
     r.gStyle.SetOptStat(0)
     hists[0].SetTitle("")
-#     hists[0].SetTitle("Energy deposit by 3 MeV electrons in 56 mm of He/isoButane 80/20")
+    
+    yhmax = hists[0].GetMaximum()
+    for i in range(1, len(hists)):
+        hists[i].Draw("same")
+        if yhmax < hists[i].GetMaximum():
+            yhmax = hists[i].GetMaximum()
+            
+    hists[0].SetMaximum((int(yhmax) / 10 + 1) * 10);
     c1.Update()
     
+    for cut, mean in means_plot_data:
+        print "%d\t%.2f" % (cut, mean)
+    print "Heed\t%.2f" % hists[-1].GetMean()
     raw_input("Press ENTER to stop the script")
      
     
@@ -102,8 +115,15 @@ if __name__ == "__main__":
 #     Geant4_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Geant4/HeiBtn_80_20.root"
 #     Heed_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Heed/HeiBtn_80_20.root"
 
-    Geant4_results_file = "../Geant4/Results/HeiBut_80_20_E=1MeV_cut_scan.root"
-    Heed_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Heed/HeiBtn_80_20.root"
+#     Geant4_results_file = "../Geant4/Results/HeiBut_80_20_E=1MeV_cut_scan.root"
+#     Heed_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Heed/HeiBtn_80_20.root"
+
+    # panic verification
+    Geant4_results_file = "../Geant4/Results/ArCO2_70_30_d=1cm_E=1MeV_cut_scan_my.root"
+    Heed_results_file = "../Heed/Results/ArCO2_70_30_d=10mm.root"
+    
+#     Geant4_results_file = "../Geant4/Results/ArCO2_70_30_d=1cm_E=1MeV_cut_scan_SD.root"
+#     Heed_results_file = "../Heed/Results/ArCO2_70_30_d=10mm.root"
 
     plot_comparison(Geant4_results_file, Heed_results_file)
 

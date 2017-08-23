@@ -40,7 +40,8 @@ LRun::LRun( double myEnergy,
 	savefile = 0;
 	savedir = 0;
 
-	chamberLength = 1.4*4;  // cm
+//	chamberLength = 1.4*4;  // cm
+	chamberLength = 1.;  // cm
 
 	printStep = nev/10;
 	if (printStep == 0) printStep = 1;
