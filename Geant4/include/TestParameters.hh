@@ -23,67 +23,103 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file electromagnetic/TestEm8/include/PhysicsListMessenger.hh
-/// \brief Definition of the PhysicsListMessenger class
+/// \file electromagnetic/TestEm8/include/HistoManager.hh
+/// \brief Definition of the HistoManager class
 //
-//
-// $Id: PhysicsListMessenger.hh 92047 2015-08-14 07:23:37Z gcosmo $
+// $Id: HistoManager.hh 78549 2014-01-07 09:42:35Z gcosmo $
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   PhysicsListMessenger
+// ClassName:   HistoManager
 //
-// Description: EM physics with a possibility to add PAI model
+// Description: Singleton class to make analysis and build histograms.
+//              User cannot access to the constructor.
+//              The pointer of the only existing object can be got via
+//              HistoManager::GetPointer() static method.
+//              The first invokation of this static method makes
+//              the singleton object.
 //
 // Author:      V.Ivanchenko 01.09.2010
 //
 //----------------------------------------------------------------------------
-// 
+//
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+#ifndef TestParameters_h
+#define TestParameters_h 1
 
-#ifndef PhysicsListMessenger_h
-#define PhysicsListMessenger_h 1
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "globals.hh"
-#include "G4UImessenger.hh"
+#include "G4DataVector.hh"
+#include "G4StatDouble.hh"
 
-class PhysicsList;
-class G4UIdirectory;
-class G4UIcmdWithADoubleAndUnit;
-class G4UIcmdWithADouble;
-class G4UIcmdWithAString;
-class G4UIcmdWithAnInteger;
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//class RunAction;
+//class G4Step;
 
-class PhysicsListMessenger: public G4UImessenger
+class TestParameters
 {
-public:
-  
-  PhysicsListMessenger(PhysicsList* );
-  virtual ~PhysicsListMessenger();
-    
-  virtual void SetNewValue(G4UIcommand*, G4String);
-    
-private:
-  
-  PhysicsList* fPhysicsList;
 
-  G4UIdirectory*             fPhysDir;
-  G4UIcmdWithADoubleAndUnit* fECmd;
-  G4UIcmdWithAnInteger*      fEBCmd;
-  G4UIcmdWithAnInteger*      fCBCmd;
-  G4UIcmdWithAnInteger*      fCMCmd;
-  G4UIcmdWithAString*        fListCmd;
-  G4UIcmdWithADoubleAndUnit* fADCCmd;
-  G4UIcmdWithADouble*        fNorCmd;
-  G4UIcmdWithADouble*        fSmCmd;
-    
+public:
+  // With description
+
+  static TestParameters* GetPointer();
+
+private:
+
+  TestParameters();
+
+public: // Without description
+
+  ~TestParameters();
+
+  void SetMaxEnergy(G4double value);
+
+  G4double GetMaxEnergy() const;
+
+  void SetNumberBins(G4int value);
+
+  G4int GetNumberBins() const;
+
+  void SetNumberBinsCluster(G4int value);
+
+  G4int GetNumberBinsCluster() const;
+
+  void SetMaxCluster(G4int value);
+
+  G4int GetMaxCluster() const;
+
+  void SetEnergyPerChannel(G4double value);
+
+  G4double GetFactorALICE() const;
+
+  void SetNormFactor(G4double value);
+
+  G4double GetNormFactor() const;
+
+  void SetEnergySmear(G4double value);
+
+  G4double GetEnergySmear() const;
+
+  void SetPositionZ(G4double val);
+
+  G4double GetPositionZ() const;
+
+private:
+
+  // MEMBERS
+  static TestParameters* fManager;
+
+  G4double fMaxEnergy;
+  G4double fFactorALICE;
+  G4double fNormFactor;
+  G4double fEnergySmear;
+  G4double fPositionZ;
+
+  G4int fBinsE; 
+  G4int fBinsCluster;
+  G4int fMaxCluster;
 };
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 #endif
-
