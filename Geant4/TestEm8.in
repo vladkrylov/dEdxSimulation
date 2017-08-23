@@ -34,7 +34,7 @@
 #
 #/gun/particle mu-
 # 
-/gun/energy 3.00 MeV
+/gun/energy 1.00 MeV
 
 
 /run/beamOn 1500
