@@ -242,7 +242,7 @@ void PhysicsList::AddStepMax()
 
 void PhysicsList::SetCuts()
 {
-  G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(1.*eV,1e5);
+//  G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(1.*eV,1e5);
   if ( verboseLevel > 0 ) { DumpCutValuesTable(); }
 }
 
