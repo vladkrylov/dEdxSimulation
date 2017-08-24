@@ -12,14 +12,14 @@
 /testem/phys/addPhysics  emstandard_opt3
 /process/em/AddPAIRegion all GasDetector pai
 
-/cuts/setLowEdge 50 eV
+/cuts/setLowEdge 200.00 eV
 /cuts/setHighEdge 100.00 GeV
 
 #/testem/phys/addPhysics  pai_photon
 #
 #/testem/stepMax         10 mm
 #
-/testem/histo/setRootTreeName Lcut=1eV
+/testem/histo/setRootTreeName Lcut=200eV
 
 #
 /run/initialize

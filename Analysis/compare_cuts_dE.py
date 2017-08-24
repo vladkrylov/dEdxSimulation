@@ -34,8 +34,11 @@ def get_hist(distribution,
         h.Fill(x)
     
     # attributes
-    if color == 5:
+    if color == 5:  # bright yellow
         color = r.kYellow + 1
+    if color == 10:  # white
+        color = r.kMagenta + 2
+        
     h.SetLineColor(color)
     h.SetLineWidth(line_width)
     
@@ -118,12 +121,16 @@ if __name__ == "__main__":
 #     Geant4_results_file = "../Geant4/Results/HeiBut_80_20_E=1MeV_cut_scan.root"
 #     Heed_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Heed/HeiBtn_80_20.root"
 
-    # panic verification
-    Geant4_results_file = "../Geant4/Results/ArCO2_70_30_d=1cm_E=1MeV_cut_scan_my.root"
-    Heed_results_file = "../Heed/Results/ArCO2_70_30_d=10mm.root"
+#     # panic verification
+#     Geant4_results_file = "../Geant4/Results/ArCO2_70_30_d=1cm_E=1MeV_cut_scan_my.root"
+#     Heed_results_file = "../Heed/Results/ArCO2_70_30_d=10mm.root"
     
 #     Geant4_results_file = "../Geant4/Results/ArCO2_70_30_d=1cm_E=1MeV_cut_scan_SD.root"
 #     Heed_results_file = "../Heed/Results/ArCO2_70_30_d=10mm.root"
+
+    # new interface to PAI
+    Geant4_results_file = "../Geant4/Results/ArCO2_70_30_d=1cm_E=1MeV_cut_scan_PAI.root"
+    Heed_results_file = "../Heed/Results/ArCO2_70_30_d=10mm.root"
 
     plot_comparison(Geant4_results_file, Heed_results_file)
 
