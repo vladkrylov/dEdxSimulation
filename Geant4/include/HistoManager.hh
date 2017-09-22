@@ -90,8 +90,9 @@ public: // Without description
   void EndOfEvent();
 
   void InitializeROOT();
-  void AddEnergy(G4double edep, const G4Step*);
-  void AddPrimaryElectron(G4double energy);
+  void AddTotalEdep(G4double edep);
+  void AddIonizationEdep(G4double edep);
+  void AddSecondaryElectron(G4double energy);
 
   inline void SetTreeName(const std::string& name);
   inline void SetRootFileName(const std::string& name);
@@ -105,10 +106,12 @@ private:
   G4ElectronIonPair* fElIonPair;
 
   // ROOT
-  G4double fTotEdep;
+  G4double fTotalEdep;
+  G4double fIonizEdep;
+  G4double fSecondariesEtot;
   G4double fNeEstimated;
   G4double fNeCounted;
-  std::vector<G4double> fEnergyOfPrim;
+  std::vector<G4double> fEnergyOfSecond;
   TFile*   fRootFile;
   TTree*   fDetectorTree;
   std::string fTreeName;

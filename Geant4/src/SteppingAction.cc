@@ -19,13 +19,13 @@ fDetector(detector) {}
 SteppingAction::~SteppingAction() {}
 
 void SteppingAction::UserSteppingAction(const G4Step* step) {
-	G4VPhysicalVolume*  preVolume = step-> GetPreStepPoint()->GetTouchableHandle()->GetVolume();
-	G4VPhysicalVolume* postVolume = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume();
-
-	G4VPhysicalVolume* detectorVolume = fDetector->GetDetectorVolume();
-
-	G4Track* track = step->GetTrack();
-	const G4ParticleDefinition* particle = track->GetParticleDefinition();
+//	G4VPhysicalVolume*  preVolume = step-> GetPreStepPoint()->GetTouchableHandle()->GetVolume();
+//	G4VPhysicalVolume* postVolume = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume();
+//
+//	G4VPhysicalVolume* detectorVolume = fDetector->GetDetectorVolume();
+//
+//	G4Track* track = step->GetTrack();
+//	const G4ParticleDefinition* particle = track->GetParticleDefinition();
 //	Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
 
 //	// gas conversion
