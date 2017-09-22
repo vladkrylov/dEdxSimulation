@@ -173,6 +173,7 @@ void LRun::Analyze()
 
 	detectorTree->Branch("dEPerTrack", &fdEPerTrack);
 	detectorTree->Branch("NePerTrack", &fNePerTrack);
+	detectorTree->Branch("ClPerTrack", &fClPerTrack);
 
 	detectorTree->Branch("dEPerGap", &fdEPerGap);
 	detectorTree->Branch("NePerGap", &fNePerGap);
