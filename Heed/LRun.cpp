@@ -40,7 +40,8 @@ LRun::LRun( double myEnergy,
 	savefile = 0;
 	savedir = 0;
 
-	chamberLength = 1.4*4;  // cm
+//	chamberLength = 1.4*4;  // cm
+	chamberLength = 1.;  // cm
 
 	printStep = nev/10;
 	if (printStep == 0) printStep = 1;
@@ -84,7 +85,8 @@ void LRun::Generate()
 
 	// Make a medium
 	MediumMagboltz* gas = new MediumMagboltz();
-	gas->SetComposition("he", 80., "isobutane", 20.);
+//	gas->SetComposition("he", 80., "isobutane", 20.);
+	gas->SetComposition("ar", 70., "co2", 30.);
 	gas->SetTemperature(293.15);
 	gas->SetPressure(760.);
 
@@ -171,6 +173,7 @@ void LRun::Analyze()
 
 	detectorTree->Branch("dEPerTrack", &fdEPerTrack);
 	detectorTree->Branch("NePerTrack", &fNePerTrack);
+	detectorTree->Branch("ClPerTrack", &fClPerTrack);
 
 	detectorTree->Branch("dEPerGap", &fdEPerGap);
 	detectorTree->Branch("NePerGap", &fNePerGap);

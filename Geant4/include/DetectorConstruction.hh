@@ -72,10 +72,23 @@ public:
   void SetContainerThickness(G4double);     
 
   void SetPairEnergy(G4double);
+
+  G4VPhysicalVolume* GetDetectorVolume() {return fPhysDetector;};
      
 private:
 
   void DefineMaterials();
+  G4Material* ConstructGasMixture2(G4Material* gas1, G4Material* gas2, G4int fraq1, G4int fraq2);
+  G4Material* He;
+  G4Material* Ar;
+  G4Material* Kr;
+  G4Material* Xe;
+  G4Material* CO2;
+  G4Material* Methane;
+  G4Material* Propane;
+  G4Material* empty;
+  G4Material* C3H8;
+  G4Material* IsoBut;
 
   G4Material*        fGasMat;
   G4double           fGasThickness;
