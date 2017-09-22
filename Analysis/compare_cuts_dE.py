@@ -11,6 +11,22 @@ def get_G4_distribution(tfile, ttree_name):
     for event in tree:
         counter += 1
         try:
+            dist.append(event.IonizEDep)
+        except:
+            pass
+        
+    if len(dist) == 0:
+        print "No data found for Geant4 distribution"
+        
+    return dist
+
+def get_Heed_distribution(tfile, ttree_name):
+    dist = []
+    tree = tfile.Get(ttree_name)
+    counter = 0
+    for event in tree:
+        counter += 1
+        try:
             dist.append(event.dEPerTrack)
         except:
             pass
@@ -60,7 +76,7 @@ def plot_comparison(G4_res_file, heed_res_file):
         means_plot_data.append((int(ttree_names[i][5:-2]), h.GetMean()))
     
     f_heed = r.TFile(heed_res_file)
-    hists.append(get_hist(get_G4_distribution(f_heed, "E=1.511MeV"), name="HEED", color=i+5))
+    hists.append(get_hist(get_Heed_distribution(f_heed, "E=1.511MeV"), name="HEED", color=i+5))
     
     c1, hists[0] = fullwidth(hists[0])
     
@@ -121,15 +137,23 @@ if __name__ == "__main__":
 #     Geant4_results_file = "../Geant4/Results/HeiBut_80_20_E=1MeV_cut_scan.root"
 #     Heed_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Heed/HeiBtn_80_20.root"
 
+<<<<<<< HEAD
 #     # panic verification
+=======
+    # panic verification
+>>>>>>> stash
 #     Geant4_results_file = "../Geant4/Results/ArCO2_70_30_d=1cm_E=1MeV_cut_scan_my.root"
 #     Heed_results_file = "../Heed/Results/ArCO2_70_30_d=10mm.root"
     
 #     Geant4_results_file = "../Geant4/Results/ArCO2_70_30_d=1cm_E=1MeV_cut_scan_SD.root"
 #     Heed_results_file = "../Heed/Results/ArCO2_70_30_d=10mm.root"
 
+<<<<<<< HEAD
     # new interface to PAI
     Geant4_results_file = "../Geant4/Results/ArCO2_70_30_d=1cm_E=1MeV_cut_scan_PAI.root"
+=======
+    Geant4_results_file = "../Geant4/Results/ArCO2_70_30.root"
+>>>>>>> stash
     Heed_results_file = "../Heed/Results/ArCO2_70_30_d=10mm.root"
 
     plot_comparison(Geant4_results_file, Heed_results_file)
