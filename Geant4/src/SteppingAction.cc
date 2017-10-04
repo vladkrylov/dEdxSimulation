@@ -18,16 +18,17 @@ fDetector(detector) {}
 
 SteppingAction::~SteppingAction() {}
 
-void SteppingAction::UserSteppingAction(const G4Step* step) {
+void SteppingAction::UserSteppingAction(const G4Step* step)
+{
 //	G4VPhysicalVolume*  preVolume = step-> GetPreStepPoint()->GetTouchableHandle()->GetVolume();
 //	G4VPhysicalVolume* postVolume = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume();
+//	HistoManager* m = HistoManager::GetPointer();
 //
 //	G4VPhysicalVolume* detectorVolume = fDetector->GetDetectorVolume();
 //
 //	G4Track* track = step->GetTrack();
 //	const G4ParticleDefinition* particle = track->GetParticleDefinition();
-//	Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
-
+//
 //	// gas conversion
 //	if (preVolume == detectorVolume) {
 //		if (track->GetCurrentStepNumber() == 1) { // creation
@@ -35,8 +36,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
 //				if (particle->GetParticleType() == "lepton"  // only electrons
 //					&& track->GetCreatorProcess()->GetProcessName() == "eIoni")
 //				{
-//					HistoManager* m = HistoManager::GetPointer();
-//					m->AddPrimaryElectron(step->GetTotalEnergyDeposit()/eV);
+//					G4cout << "Here" << G4endl;
+//					m->AddTotalEdep(step->GetTotalEnergyDeposit()/keV);
 //					track->GetTotalEnergy();
 //					track->SetTrackStatus(fStopAndKill); // kill track
 //				}

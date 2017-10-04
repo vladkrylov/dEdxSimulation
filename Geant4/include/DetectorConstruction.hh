@@ -96,7 +96,7 @@ private:
 
   G4Material*        fWindowMat;
   G4double           fWindowThick;
- 
+
   G4Material*        fWorldMaterial;
             
   G4VPhysicalVolume* fPhysWorld;

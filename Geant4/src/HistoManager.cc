@@ -133,10 +133,11 @@ void HistoManager::EndOfEvent()
   fSecondariesEtot = std::accumulate(fEnergyOfSecond.begin(), fEnergyOfSecond.end(), 0.);
   
   if (fDetectorTree) {
-	  fSecondariesEtot /= keV;
-	  fTotalEdep /= keV;
-	  fIonizEdep /= keV;
-	  fDetectorTree->Fill();
+    G4double enUnits = keV;
+	fSecondariesEtot /= enUnits;
+	fTotalEdep /= enUnits;
+	fIonizEdep /= enUnits;
+	fDetectorTree->Fill();
   }
 }
 

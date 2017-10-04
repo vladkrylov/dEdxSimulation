@@ -4,7 +4,7 @@ from change_parameter import change_parameter
 from logistics import *
 from SystemOfUnits import *
 
-SCAN_RESULTS_FILE = os.path.join(get_proj_dir(), "Results/ArCO2_70_30.root")
+SCAN_RESULTS_FILE = os.path.join(get_proj_dir(), "Results/HeIBut_80_20.root")
 
 def clean_existing_results():
     if os.path.isfile(SCAN_RESULTS_FILE):
@@ -30,8 +30,8 @@ if __name__ == "__main__":
     clean_existing_results()
     
     cuts_lower = [E*eV for E in [1, 2, 5, 10, 20, 25, 28, 50, 100]]
-    cuts_upper = [100*GeV for E in cuts_lower]
+    cuts_upper = [100*GeV for _ in cuts_lower]
     
-    set_energy(1.*MeV)
+    set_energy(3.*MeV)
     scan(zip(cuts_lower, cuts_upper))
 

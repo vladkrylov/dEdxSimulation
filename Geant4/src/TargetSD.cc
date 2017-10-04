@@ -71,6 +71,7 @@ G4bool TargetSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 //  HistoManager* m = HistoManager::GetPointer();
   fHisto->AddTotalEdep(totEDep);
   fHisto->AddIonizationEdep(ionEDep);
+  G4cout << "Here" << G4endl;
 
   return true;
 }

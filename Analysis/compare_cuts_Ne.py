@@ -1,77 +1,39 @@
 import ROOT as r
 
+from TFile_io import branch_to_list, get_hist
 from SystemOfUnits import *
 from fig2LaTeX import halfwidth, fullwidth 
 from __builtin__ import raw_input
 
-def get_G4_distribution(tfile, ttree_name):
-    dist = []
-    tree = tfile.Get(ttree_name)
-    counter = 0
-    for event in tree:
-        counter += 1
-        try:
-            dist.append(event.NePerTrack_Counted)
-        except:
-            pass
-        
-    if len(dist) == 0:
-        print "No data found for Geant4 distribution"
-        
-    return dist
-
-
-def get_Heed_distribution(tfile, ttree_name):
-    dist = []
-    tree = tfile.Get(ttree_name)
-    counter = 0
-    for event in tree:
-        counter += 1
-        try:
-            dist.append(event.NePerTrack)
-        except:
-            pass
-        
-    if len(dist) == 0:
-        print "No data found for Geant4 distribution"
-        
-    return dist
-
-
-def get_hist(distribution,
-             name,
-             color=r.kRed,
-             line_width=2
-             ):
-    nbins = 600
-    h_min = 0
-    h_max = nbins
-    h = r.TH1F(name, name, nbins, h_min, h_max)
-    for x in distribution:
-        h.Fill(x)
+def plot_comparison(G4_res_file, heed_res_file, binning=[]):
+    if binning:
+        x_min, x_max, n_bins = binning
+    else:
+        x_min = 0.
+        x_max = 100.
+        n_bins = 100
     
-    # attributes
-    if color == 5:
-        color = r.kYellow + 1
-    h.SetLineColor(color)
-    h.SetLineWidth(line_width)
-    
-    return h.Clone()
-
-
-def plot_comparison(G4_res_file, heed_res_file):
     f = r.TFile(G4_res_file)
     ttree_names = [t.GetName() for t in f.GetListOfKeys() if t.GetName().startswith("Lcut=") and t.GetName().endswith("eV")]
     
     hists = []
     for i in range(len(ttree_names)):
-        d = get_G4_distribution(f, ttree_names[i])
-        h_name = "Low cut = %s eV" % ttree_names[i][5:-2]
-        h = get_hist(d, name=h_name, color=i+2)
+        h = get_hist(branch_to_list(f, ttree_names[i], tbranch_name="NePerTrack_Counted")
+                     , name="Low cut = %s eV" % ttree_names[i][5:-2]
+                     , color=i+2
+                     , x_min=x_min
+                     , x_max=x_max
+                     , n_bins=n_bins)
         hists.append(h)
     
     f_heed = r.TFile(heed_res_file)
-    hists.append(get_hist(get_Heed_distribution(f_heed, "E=3.511MeV"), name="HEED", color=i+5))
+    hists.append(get_hist(branch_to_list(f_heed, "E=3.511MeV", tbranch_name="NePerTrack")
+                          , name="HEED"
+                          , color=i+5
+                          , x_min=x_min
+                          , x_max=x_max
+                          , n_bins=n_bins)
+                 )
     
     c1, hists[0] = fullwidth(hists[0])
     
@@ -120,8 +82,9 @@ if __name__ == "__main__":
 
     Geant4_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Geant4/HeiBtn_80_20.root"
     Heed_results_file = "/home/vlad/Thesis/Meetings/2Doro/1MeV_picture/Heed/HeiBtn_80_20.root"
+    binning = 0, 500, 500
         
-    plot_comparison(Geant4_results_file, Heed_results_file)
+    plot_comparison(Geant4_results_file, Heed_results_file, binning=binning)
 
 
 

@@ -80,22 +80,23 @@ DetectorConstruction::DetectorConstruction(PrimaryGeneratorAction* p)
     fDetectorMessenger(0), fTargetSD(0), fGasDetectorCuts(0),
     fRegGasDet(0), fPrimaryGenerator(p)
 {
-//  fGasThickness = 14.*mm*4;
-  fGasThickness = 10.*mm;
-  fGasRadius    = 10.*cm;
-
-  fWindowThick  = 51.0*micrometer;
-
   DefineMaterials();
+  // Most used parameters
+//  fGasMat = ConstructGasMixture2(Ar, CO2, 70, 30);
+  fGasMat = ConstructGasMixture2(He, IsoBut, 80, 20);
+//  SetPairEnergy(280*eV);
+//  fGasThickness = 14.*mm*4;
+  fGasThickness = 56.*mm;
+  fGasRadius    = 100.*mm;
 
   fDetectorMessenger = new DetectorMessenger(this);
 
   G4double cut = fGasThickness;
-  fGasDetectorCuts   = new G4ProductionCuts();
-  fGasDetectorCuts->SetProductionCut(cut,"gamma");
-  fGasDetectorCuts->SetProductionCut(cut,"e-");
-  fGasDetectorCuts->SetProductionCut(cut,"e+");
-  fGasDetectorCuts->SetProductionCut(cut,"proton");
+  fGasDetectorCuts = new G4ProductionCuts();
+  fGasDetectorCuts->SetProductionCut(cut, "gamma");
+  fGasDetectorCuts->SetProductionCut(cut, "e-");
+  fGasDetectorCuts->SetProductionCut(cut, "e+");
+  fGasDetectorCuts->SetProductionCut(cut, "proton");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -110,7 +111,7 @@ DetectorConstruction::~DetectorConstruction()
 
 void DetectorConstruction::DefineMaterials()
 { 
-  //This function illustrates the possible ways to define materials 
+  // This function illustrates the possible ways to define materials
   G4String name, symbol ;          
   G4double density;  
   G4int nel; 
@@ -125,7 +126,7 @@ void DetectorConstruction::DefineMaterials()
   G4Element* elC  = manager->FindOrBuildElement(6);
   G4Element* elO  = manager->FindOrBuildElement(8);
   G4Element* elF  = manager->FindOrBuildElement(9);
-  G4Element* elNe  = manager->FindOrBuildElement(10);
+  G4Element* elNe = manager->FindOrBuildElement(10);
   G4Element* elXe = manager->FindOrBuildElement(54);
   //
   // simple gases at STP conditions 
@@ -138,7 +139,7 @@ void DetectorConstruction::DefineMaterials()
   // gases at STP conditions
   //
   CO2 = manager->FindOrBuildMaterial("G4_CARBON_DIOXIDE");
-  G4Material* Mylar  = manager->FindOrBuildMaterial("G4_MYLAR");
+  G4Material* Mylar = manager->FindOrBuildMaterial("G4_MYLAR");
   Methane= manager->FindOrBuildMaterial("G4_METHANE");
   Propane= manager->FindOrBuildMaterial("G4_PROPANE");
   empty  = manager->FindOrBuildMaterial("G4_Galactic");
@@ -281,7 +282,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   fLogicWorld = new G4LogicalVolume(SolidWorld, fWorldMaterial, "World");
                                    
   fPhysWorld = new G4PVPlacement(0,                        //no rotation
-                                   G4ThreeVector(0.,0.,0.),     
+                                 G4ThreeVector(0.,0.,0.),
                                  "World", 
                                  fLogicWorld,
                                  0,                       //its mother  volume
@@ -292,10 +293,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Tubs* det = new G4Tubs("Gas", 0., fGasRadius, fGasThickness/2.,
                                   0., CLHEP::twopi); 
 
-  fGasMat = ConstructGasMixture2(Ar, CO2, 70, 30);
-//  fGasMat = ConstructGasMixture2(He, IsoBut, 80, 20);
-//  SetPairEnergy(280*eV);
-//  fGasMat->GetIonisation()->Get;
 
   fLogicDet = new G4LogicalVolume(det, fGasMat, "Gas");
   fPhysDetector = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), "Gas", fLogicDet, fPhysWorld, false, 0);
@@ -452,7 +449,6 @@ G4Material* DetectorConstruction::ConstructGasMixture2(G4Material* gas1, G4Mater
 
 	G4double fractionmass1 = 1. / (1. + (gas2->GetDensity()*fraq2) / (gas1->GetDensity()*fraq1));
 	G4double fractionmass2 = 1. / (1. + (gas1->GetDensity()*fraq1) / (gas2->GetDensity()*fraq2));
-	G4cout << "fractionmass1 = " << fractionmass1 << "; fractionmass2 = " << fractionmass2 << G4endl;
 	G4Material* gas = new G4Material(name, density, nComponents);
 	gas->AddMaterial(gas1, fractionmass1) ;
 	gas->AddMaterial(gas2, fractionmass2) ;
@@ -462,5 +458,8 @@ G4Material* DetectorConstruction::ConstructGasMixture2(G4Material* gas1, G4Mater
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+
+
 
 
