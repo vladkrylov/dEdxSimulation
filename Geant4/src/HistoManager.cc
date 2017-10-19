@@ -122,7 +122,8 @@ void HistoManager::BeginOfEvent()
   fSecondariesEtot = 0.0;
   fTotalEdep = 0.0;
   fIonizEdep = 0.0;
-  fNeCounted = 0.;
+  fNeCounted = 0;
+  fEkinLost = 0.;
   fEnergyOfSecond.clear();
 }
 
@@ -137,6 +138,7 @@ void HistoManager::EndOfEvent()
 	fSecondariesEtot /= enUnits;
 	fTotalEdep /= enUnits;
 	fIonizEdep /= enUnits;
+	fEkinLost /= enUnits;
 	fDetectorTree->Fill();
   }
 }
@@ -153,6 +155,13 @@ void HistoManager::AddTotalEdep(G4double edep)
 void HistoManager::AddIonizationEdep(G4double edep)
 {
   fIonizEdep += edep;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void HistoManager::AddEkinLost(G4double ekin)
+{
+	fEkinLost += ekin;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -177,8 +186,9 @@ void HistoManager::InitializeROOT()
 	fDetectorTree = new TTree(fTreeName.c_str(), "GasDetector");
 	fDetectorTree->Branch("SecTotalEn", &fSecondariesEtot);
 	fDetectorTree->Branch("TotalEDep", &fTotalEdep);
-	fDetectorTree->Branch("IonizEDep", &fIonizEdep);
-	fDetectorTree->Branch("NSec_Estimated", &fNeEstimated);
+//	fDetectorTree->Branch("IonizEDep", &fIonizEdep);
+//	fDetectorTree->Branch("NSec_Estimated", &fNeEstimated);
+	fDetectorTree->Branch("fEkinLost", &fEkinLost);
 	fDetectorTree->Branch("NePerTrack_Counted", &fNeCounted);
 	fDetectorTree->Branch("SecondaryElecronEnergy", &fEnergyOfSecond);
 }

@@ -66,12 +66,12 @@ void TargetSD::Initialize(G4HCofThisEvent*)
 
 G4bool TargetSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-  G4double totEDep = aStep->GetTotalEnergyDeposit();
-  G4double ionEDep = totEDep - aStep->GetNonIonizingEnergyDeposit();
-//  HistoManager* m = HistoManager::GetPointer();
-  fHisto->AddTotalEdep(totEDep);
-  fHisto->AddIonizationEdep(ionEDep);
-  G4cout << "Here" << G4endl;
+//  G4double totEDep = aStep->GetTotalEnergyDeposit();
+//  G4double ionEDep = totEDep - aStep->GetNonIonizingEnergyDeposit();
+////  HistoManager* m = HistoManager::GetPointer();
+//  fHisto->AddTotalEdep(totEDep);
+//  fHisto->AddIonizationEdep(ionEDep);
+//  G4cout << "Here" << G4endl;
 
   return true;
 }

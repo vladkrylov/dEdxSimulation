@@ -14,7 +14,9 @@
 
 SteppingAction::SteppingAction(DetectorConstruction* detector) :
 G4UserSteppingAction(),
-fDetector(detector) {}
+fDetector(detector),
+fHisto(HistoManager::GetPointer())
+{}
 
 SteppingAction::~SteppingAction() {}
 
@@ -44,4 +46,33 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 //			}
 //		}
 //	}
+
+	// according to Dorothea Pfeiffer presentation
+	G4VPhysicalVolume* volumePresent = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
+	G4VPhysicalVolume* volumeNext = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume();
+	G4VPhysicalVolume* volumeDet = fDetector->GetDetectorVolume();
+
+	G4Track* track = step->GetTrack();
+	// Number of secondaries and their kinetic energy
+	if (track->GetDefinition()->GetParticleName() == "e-"
+		&& track->GetParentID() == 1  // only secondaries
+		&& volumePresent == volumeDet
+		)
+	{
+		if (track->GetCurrentStepNumber() == 1) {  // creation
+			fHisto->AddSecondaryElectron(step->GetPreStepPoint()->GetKineticEnergy());
+		}
+		fHisto->AddTotalEdep(step->GetTotalEnergyDeposit());
+	}
+
+	if (track->GetParentID() == 1
+		&& step->GetPostStepPoint()->GetStepStatus() == fGeomBoundary
+		&& volumePresent != volumeNext
+		&& volumeNext != volumeDet
+		&& track->GetDefinition()->GetParticleName() == "e-")
+	{
+		fHisto->AddEkinLost(step->GetPostStepPoint()->GetKineticEnergy());
+//		track->SetTrackStatus(fStopAndKill);
+	}
+
 }

@@ -8,6 +8,7 @@
 #include "globals.hh"
 
 class G4LogicalVolume;
+class HistoManager;
 
 class SteppingAction : public G4UserSteppingAction {
 	public:
@@ -20,6 +21,7 @@ class SteppingAction : public G4UserSteppingAction {
 	private:
 		EventAction*  fEventAction;
 		DetectorConstruction* fDetector;
+		HistoManager* fHisto;
 };
 
 #endif

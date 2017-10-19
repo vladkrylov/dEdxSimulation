@@ -93,6 +93,7 @@ public: // Without description
   void AddTotalEdep(G4double edep);
   void AddIonizationEdep(G4double edep);
   void AddSecondaryElectron(G4double energy);
+  void AddEkinLost(G4double ekin);
 
   inline void SetTreeName(const std::string& name);
   inline void SetRootFileName(const std::string& name);
@@ -109,8 +110,9 @@ private:
   G4double fTotalEdep;
   G4double fIonizEdep;
   G4double fSecondariesEtot;
-  G4double fNeEstimated;
-  G4double fNeCounted;
+  G4double fEkinLost;
+  G4int fNeEstimated;
+  G4int fNeCounted;
   std::vector<G4double> fEnergyOfSecond;
   TFile*   fRootFile;
   TTree*   fDetectorTree;

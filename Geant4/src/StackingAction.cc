@@ -76,7 +76,7 @@ StackingAction::ClassifyNewTrack(const G4Track* aTrack)
 	 )
     {
       fHisto->AddSecondaryElectron(aTrack->GetKineticEnergy());
-      if (fKillSecondary) status = fKill;
+//      if (fKillSecondary) status = fKill;
     }
   return status;
 }

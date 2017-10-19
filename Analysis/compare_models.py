@@ -6,7 +6,7 @@ from fig2LaTeX import halfwidth, fullwidth
 from analysis_misc import get_color
 from __builtin__ import raw_input
 
-def plot_comparison(G4_res_file, heed_res_file, binning=[]):
+def plot_comparison(G4_res_file, heed_res_file, binning=[], branch_name="dEPerTrack", xtitle=""):
     if binning:
         x_min, x_max, n_bins = binning
     else:
@@ -19,9 +19,9 @@ def plot_comparison(G4_res_file, heed_res_file, binning=[]):
     
     hists = []
     for i in range(len(ttree_names)):
-        h = get_hist(branch_to_list(f, ttree_names[i], tbranch_name="SecTotalEn")
+        h = get_hist(branch_to_list(f, ttree_names[i], tbranch_name=branch_name)
                      , name=ttree_names[i]
-                     , color=i+2
+                     , color=get_color(i)
                      , x_min=x_min
                      , x_max=x_max
                      , n_bins=n_bins)
@@ -29,7 +29,7 @@ def plot_comparison(G4_res_file, heed_res_file, binning=[]):
     
     if heed_res_file:
         f_heed = r.TFile(heed_res_file)
-        hists.append(get_hist(branch_to_list(f_heed, "E=3.511MeV", tbranch_name="dEPerTrack")
+        hists.append(get_hist(branch_to_list(f_heed, "E=3.511MeV", tbranch_name=branch_name)
                               , name="HEED"
                               , color=get_color(i)
                               , x_min=x_min
@@ -49,17 +49,19 @@ def plot_comparison(G4_res_file, heed_res_file, binning=[]):
         
     # Titles
     hists[0].Draw()
-    hists[0].GetXaxis().SetTitle("Number of secondary electrons")
+    hists[0].GetXaxis().SetTitle(xtitle)
     hists[0].GetYaxis().SetTitle("Counts")
+    hists[0].GetYaxis().SetTitleOffset(1.4)
     
     for i in range(1, len(hists)):
         hists[i].Draw("same")
+        print hists[i].GetName(), hists[i].GetLineColor()
     
     c1.SetGrid()
-    c1.SetLogy()
+#     c1.SetLogy()
     
     # Legend
-    legend = r.TLegend(0.6,0.35,0.9,0.9);
+    legend = r.TLegend(0.50, 0.45, 0.9, 0.9);
     for h in hists:
         legend.AddEntry(h, h.GetName(), "l");
     legend.Draw();
@@ -75,11 +77,33 @@ def plot_comparison(G4_res_file, heed_res_file, binning=[]):
      
     
 if __name__ == "__main__":
-    Geant4_results_file = "../Geant4/Results/HeIBut_80_20_models_scan.root"
+#     Geant4_results_file = "../Geant4/Results/HeIBut_80_20_models_scan.root"
+#     Heed_results_file = ""
+#     binning = 0, 35, 35  # x_min, x_max, n_bins
+#     branch_name = "NePerTrack_Counted"
+#     xtitle = "Number of primary ionization collisions"
+
+#     Geant4_results_file = "../Geant4/Results/HeIBut_80_20_models_scan.root"
+#     Heed_results_file = ""
+#     binning = 0, 15, 75  # x_min, x_max, n_bins
+#     branch_name = "SecTotalEn"
+#     xtitle = "Kinetic energy of electrons released in primary ionizations"
+
+    Geant4_results_file = "../Geant4/PAI_HeIBut_80_20_models_scan.root"
     Heed_results_file = ""
-    binning = 0, 30, 70  # x_min, x_max, n_bins
-        
-    plot_comparison(Geant4_results_file, Heed_results_file, binning=binning)
+    binning = 0, 20, 120  # x_min, x_max, n_bins
+    branch_name = "SecTotalEn"
+    xtitle = "Kinetic energy of electrons released in primary ionizations [keV]"
+    # legend = (0.55, 0.45, 0.9, 0.9)
+
+#     Geant4_results_file = "../Geant4/PAI_HeIBut_80_20_models_scan.root"
+#     Heed_results_file = ""
+#     binning = 40, 150, 110  # x_min, x_max, n_bins
+#     branch_name = "NePerTrack_Counted"
+#     xtitle = "Number of primary ionization collisions"
+#     # legend = (0.45, 0.45, 0.9, 0.9)
+            
+    plot_comparison(Geant4_results_file, Heed_results_file, binning=binning, branch_name=branch_name, xtitle=xtitle)
 
 
 

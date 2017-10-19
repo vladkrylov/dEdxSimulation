@@ -3,7 +3,6 @@ from logistics import *
 
 
 def get_tree_name(model_name):
-    model_name = model_name.lower()
     mac_name_to_G4_class = {
         "emstandard_opt0": "G4EmStandardPhysics",
         "emstandard_opt1": "G4EmStandardPhysics_option1",
@@ -13,7 +12,7 @@ def get_tree_name(model_name):
         "emstandardWVI": "G4EmStandardPhysicsWVI",
         "emstandardSS": "G4EmStandardPhysicsSS",
         "emstandardGS": "G4EmStandardPhysicsGS",
-        "emlivermore": "G4EmLivermorePhysics",
+        "emlivermore" : "G4EmLivermorePhysics",
         "empenelope": "G4EmPenelopePhysics",
         "emlowenergy": "G4EmLowEPPhysics"
         }
@@ -22,15 +21,15 @@ def get_tree_name(model_name):
 
 
 if __name__ == "__main__":
-    out_file = os.path.join(get_proj_dir(), "Results/HeIBut_80_20_models_scan.root")
+    out_file = os.path.join(get_proj_dir(), "PAI_HeIBut_80_20_models_scan.root")
     models = ["emstandard_opt0",
               "emstandard_opt1", 
               "emstandard_opt2", 
               "emstandard_opt3", 
               "emstandard_opt4",
-              "emstandardWVI",
-              "emstandardSS",
-              "emstandardGS",
+#               "emstandardWVI",
+#               "emstandardSS",
+#               "emstandardGS",
               "emlivermore", 
               "empenelope",
               "emlowenergy"
@@ -40,7 +39,7 @@ if __name__ == "__main__":
         os.remove(out_file)
     
     energy = 3.*MeV
-    set_energy(energy/MeV)
+    set_energy(energy)
     
     for m in models:
         set_phys_model(m)
