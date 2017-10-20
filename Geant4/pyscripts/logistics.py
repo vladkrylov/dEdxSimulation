@@ -9,7 +9,7 @@ from SystemOfUnits import *
 
 def get_proj_dir():
     local_proj_dir = "/home/vlad/10g4work/gasEDep/Geant4"
-    lx2_proj_dir = None
+    lx2_proj_dir = "/exp/leetech/simulations/dEdxSimulation/Geant4"
     if isdir(local_proj_dir):
         return local_proj_dir
     elif isdir(lx2_proj_dir):
