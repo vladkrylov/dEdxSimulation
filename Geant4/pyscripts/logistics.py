@@ -13,7 +13,7 @@ def get_proj_dir():
     if isdir(local_proj_dir):
         return local_proj_dir
     elif isdir(lx2_proj_dir):
-        return local_proj_dir
+        return lx2_proj_dir
 
     return None
 
