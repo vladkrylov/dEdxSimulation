@@ -1,5 +1,6 @@
 Geant4/build/
 .*
+*.txt
 
 !.gitignore
 !Geant4/CMakeLists.txt
@@ -25,7 +26,7 @@ Degrad/degrad
 *.pdf
 *.o
 *.mk
-*.txt
+
 *.d
 *.so
 *.OUT
