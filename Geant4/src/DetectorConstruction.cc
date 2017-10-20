@@ -86,7 +86,7 @@ DetectorConstruction::DetectorConstruction(PrimaryGeneratorAction* p)
   fGasMat = ConstructGasMixture2(He, IsoBut, 80, 20);
 //  SetPairEnergy(280*eV);
 //  fGasThickness = 14.*mm*4;
-  fGasThickness = 56.*mm;
+  fGasThickness = 10.*mm;
   fGasRadius    = 100.*mm;
 
   fDetectorMessenger = new DetectorMessenger(this);

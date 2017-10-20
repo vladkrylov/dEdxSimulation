@@ -52,6 +52,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 	G4VPhysicalVolume* volumeNext = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume();
 	G4VPhysicalVolume* volumeDet = fDetector->GetDetectorVolume();
 
+	fHisto->AddTotalEdep(step->GetTotalEnergyDeposit());
+
 	G4Track* track = step->GetTrack();
 	// Number of secondaries and their kinetic energy
 	if (track->GetDefinition()->GetParticleName() == "e-"
@@ -62,7 +64,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 		if (track->GetCurrentStepNumber() == 1) {  // creation
 			fHisto->AddSecondaryElectron(step->GetPreStepPoint()->GetKineticEnergy());
 		}
-		fHisto->AddTotalEdep(step->GetTotalEnergyDeposit());
 	}
 
 	if (track->GetParentID() == 1
