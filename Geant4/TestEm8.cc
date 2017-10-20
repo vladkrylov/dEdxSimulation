@@ -71,8 +71,8 @@ int main(int argc,char** argv)
   runManager->SetUserAction(gun);
   runManager->SetUserAction(new RunAction());
   runManager->SetUserAction(new EventAction());
-  runManager->SetUserAction(new StackingAction());
-//  runManager->SetUserAction(new SteppingAction(det));
+//  runManager->SetUserAction(new StackingAction());
+  runManager->SetUserAction(new SteppingAction(det));
   
   G4UImanager* UI = G4UImanager::GetUIpointer();
 

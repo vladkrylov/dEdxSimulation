@@ -9,17 +9,17 @@
 #
 #  select EM PhysicsList
 #
-/testem/phys/addPhysics  emstandard_opt3
+/testem/phys/addPhysics emstandard_opt3
 /process/em/AddPAIRegion all GasDetector pai
 
-/cuts/setLowEdge 200.00 eV
+/cuts/setLowEdge 100.00 eV
 /cuts/setHighEdge 100.00 GeV
 
 #/testem/phys/addPhysics  pai_photon
 #
 #/testem/stepMax         10 mm
 #
-/testem/histo/setRootTreeName Lcut=200eV
+/testem/histo/setRootTreeName Lcut=100eV
 
 #
 /run/initialize
@@ -34,8 +34,7 @@
 #
 #/gun/particle mu-
 # 
-/gun/energy 1.00 MeV
+/gun/energy 3.00 MeV
 
-
-/run/beamOn 1500
+/run/beamOn 10000
 

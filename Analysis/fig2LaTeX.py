@@ -1,6 +1,6 @@
 import ROOT as r
 
-def halfwidth(main_curve):
+def halfwidth(main_curve=None):
     canvas = r.TCanvas("c", "c", 50, 50, 600, 600)
     
     main_curve.GetXaxis().SetTitleSize(0.05);
@@ -8,7 +8,7 @@ def halfwidth(main_curve):
     return canvas, main_curve
 
 
-def fullwidth(main_curve):
+def fullwidth(main_curve=None):
     canvas = r.TCanvas("c", "c", 50, 50, 900, 600)
     
     main_curve.GetXaxis().SetTitleSize(0.04);

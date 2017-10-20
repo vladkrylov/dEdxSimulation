@@ -1,15 +1,54 @@
 import os
 from logistics import *
 
-if __name__ == "__main__":
+
+def get_tree_name(model_name):
+    mac_name_to_G4_class = {
+        "emstandard_opt0": "G4EmStandardPhysics",
+        "emstandard_opt1": "G4EmStandardPhysics_option1",
+        "emstandard_opt2": "G4EmStandardPhysics_option2",
+        "emstandard_opt3": "G4EmStandardPhysics_option3",
+        "emstandard_opt4": "G4EmStandardPhysics_option4",
+        "emstandardWVI": "G4EmStandardPhysicsWVI",
+        "emstandardSS": "G4EmStandardPhysicsSS",
+        "emstandardGS": "G4EmStandardPhysicsGS",
+        "emlivermore" : "G4EmLivermorePhysics",
+        "empenelope": "G4EmPenelopePhysics",
+        "emlowenergy": "G4EmLowEPPhysics"
+        }
     
-    models = ["emstandard_opt1", "emstandard_opt2", "emstandard_opt3", "emstandard_opt4", "emlivermore", "empenelope", "pai"]
-    energy = 3*MeV
+    return mac_name_to_G4_class.get(model_name) or "Unknown_model"
+
+
+if __name__ == "__main__":
+    out_file = os.path.join(get_proj_dir(), "PAI_HeIBut_80_20_models_scan.root")
+    models = ["emstandard_opt0",
+              "emstandard_opt1", 
+              "emstandard_opt2", 
+              "emstandard_opt3", 
+              "emstandard_opt4",
+#               "emstandardWVI",
+#               "emstandardSS",
+#               "emstandardGS",
+              "emlivermore", 
+              "empenelope",
+              "emlowenergy"
+              ]
+    
+    if os.path.isfile(out_file):
+        os.remove(out_file)
+    
+    energy = 3.*MeV
+    set_energy(energy)
+    
     for m in models:
         set_phys_model(m)
-        set_energy(energy/MeV)
+        tree_name = get_tree_name(m)
         
-        out_file = get_proj_path("Results/3MeV/G4" + m + ".root")
-        os.remove(out_file)
-        run2file(out_file, mode="recreate")
+        if not run2file(out_file, tree_name=tree_name):
+            print "Something went wrong during one of the scan simulation."
+            break
+        
+        
+        
     

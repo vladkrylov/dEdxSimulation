@@ -119,41 +119,49 @@ void HistoManager::EndOfRun()
 
 void HistoManager::BeginOfEvent()
 {
-  fTotEdep = 0.0;
-  fNeCounted = 0.;
-  fEnergyOfPrim.clear();
+  fSecondariesEtot = 0.0;
+  fTotalEdep = 0.0;
+  fIonizEdep = 0.0;
+  fNeCounted = 0;
+  fEkinLost = 0.;
+  fEnergyOfSecond.clear();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void HistoManager::EndOfEvent()
 {
-  fTotEdep = std::accumulate(fEnergyOfPrim.begin(), fEnergyOfPrim.end(), 0.);
+  fSecondariesEtot = std::accumulate(fEnergyOfSecond.begin(), fEnergyOfSecond.end(), 0.);
   
   if (fDetectorTree) {
-	  fTotEdep = fTotEdep/keV;
-	  fDetectorTree->Fill();
+    G4double enUnits = keV;
+	fSecondariesEtot /= enUnits;
+	fTotalEdep /= enUnits;
+	fIonizEdep /= enUnits;
+	fEkinLost /= enUnits;
+	fDetectorTree->Fill();
   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void HistoManager::AddEnergy(G4double edep, const G4Step* step)
+void HistoManager::AddTotalEdep(G4double edep)
 {
-//  if(1 < fVerbose) {
-//    G4cout << "HistoManager::AddEnergy: e(keV)= " << edep/keV
-//           << G4endl;
-//  }
-//  fTotEdep += edep;
-//  if(step) {
-//    if(1 == step->GetTrack()->GetTrackID()) { fStepGas += 1.0; }
-//
-//    fMeanCluster += fElIonPair->MeanNumberOfIonsAlongStep(step);
-//    fCluster += fElIonPair->SampleNumberOfIonsAlongStep(step);
-//
-//    G4cout << fElIonPair->MeanNumberOfIonsAlongStep(step)/mm << G4endl;
-////    G4cout << step->GetStepLength() <<"\t"<< fElIonPair->MeanNumberOfIonsAlongStep(step) << G4endl;
-//  }
+  fTotalEdep += edep;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void HistoManager::AddIonizationEdep(G4double edep)
+{
+  fIonizEdep += edep;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void HistoManager::AddEkinLost(G4double ekin)
+{
+	fEkinLost += ekin;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -176,14 +184,18 @@ void HistoManager::InitializeROOT()
 	}
 
 	fDetectorTree = new TTree(fTreeName.c_str(), "GasDetector");
-	fDetectorTree->Branch("dEPerTrack", &fTotEdep);
-	fDetectorTree->Branch("NePerTrack_Estimated", &fNeEstimated);
+	fDetectorTree->Branch("SecTotalEn", &fSecondariesEtot);
+	fDetectorTree->Branch("TotalEDep", &fTotalEdep);
+//	fDetectorTree->Branch("IonizEDep", &fIonizEdep);
+//	fDetectorTree->Branch("NSec_Estimated", &fNeEstimated);
+	fDetectorTree->Branch("fEkinLost", &fEkinLost);
 	fDetectorTree->Branch("NePerTrack_Counted", &fNeCounted);
-	fDetectorTree->Branch("SecondaryElecronEnergy", &fEnergyOfPrim);
+	fDetectorTree->Branch("SecondaryElecronEnergy", &fEnergyOfSecond);
 }
 
-void HistoManager::AddPrimaryElectron(G4double energy)
+void HistoManager::AddSecondaryElectron(G4double energy)
 {
 	fNeCounted++;
-	fEnergyOfPrim.push_back(energy);
+	fEnergyOfSecond.push_back(energy);
 }
+
