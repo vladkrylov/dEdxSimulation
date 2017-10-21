@@ -177,6 +177,7 @@ void LRun::Analyze()
 
 	detectorTree->Branch("dEPerGap", &fdEPerGap);
 	detectorTree->Branch("NePerGap", &fNePerGap);
+	detectorTree->Branch("ClPerGap", &fClPerGap);
 
 	/**
 	 * data to save
@@ -252,13 +253,16 @@ void LRun::Analyze()
 
 		fdEPerGap.clear();
 		fNePerGap.clear();
+		fClPerGap.clear();
 
 		fdEPerTrack = 0.;
 		fNePerTrack = 0.;
+		fClPerTrack = 0.;
 
 		LTrack* track = *itr;
 		fdEPerGap.resize(nGaps, 0.);
 		fNePerGap.resize(nGaps, 0.);
+		fClPerGap.resize(nGaps, 0.);
 
 		for(std::vector<LHit*>::iterator ihit = track->hits->begin(); ihit != track->hits->end(); ++ihit) {
 			LHit* hit = *ihit;
@@ -269,9 +273,11 @@ void LRun::Analyze()
 			fNePerCluster.push_back(hit->nE);
 			fdEPerCluster.push_back(hit->Ch/keV);
 
+			fClPerTrack += 1;
 			fNePerTrack += hit->nE;
 			fdEPerTrack += hit->Ch/keV;
 
+			fClPerGap[hit->X/dl] += 1;
 			fNePerGap[hit->X/dl] += hit->nE;  // hits per gap
 			fdEPerGap[hit->X/dl] += hit->Ch/keV;  // dE per gap
 		}
@@ -301,7 +307,7 @@ void LRun::Analyze()
 std::string LRun::GenerateDirName()
 {
 	std::ostringstream strs;
-	strs << "E=" << energy/MeV << "MeV";
+	strs << std::fixed << std::setprecision(2) << "E=" << energy/MeV << "MeV";
 //	strs << "gap=" << dl*10 << "mm";
 
 	return strs.str();

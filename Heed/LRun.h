@@ -43,9 +43,13 @@ private:
 	double energy;
 	std::string primParticle;
 
-	std::vector<double> fPosX, fPosY, fPosZ, fNePerCluster, fdEPerCluster;
-	double fdEPerTrack, fNePerTrack;
-	std::vector<double> fNePerGap, fdEPerGap;
+	std::vector<double> fPosX, fPosY, fPosZ;
+	std::vector<int> fNePerCluster;
+	std::vector<double> fdEPerCluster;
+	double fdEPerTrack;
+	int fNePerTrack, fClPerTrack;
+	std::vector<double> fdEPerGap;
+	std::vector<int> fNePerGap, fClPerGap;
 
 	// Geometry
 	double chamberLength;
