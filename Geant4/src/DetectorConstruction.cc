@@ -83,7 +83,8 @@ DetectorConstruction::DetectorConstruction(PrimaryGeneratorAction* p)
   DefineMaterials();
   // Most used parameters
 //  fGasMat = ConstructGasMixture2(Ar, CO2, 70, 30);
-  fGasMat = ConstructGasMixture2(He, IsoBut, 80, 20);
+  fGasMat = ConstructGasMixture2(He, IsoBut, 90, 10);
+//  fGasMat = He;
 //  SetPairEnergy(280*eV);
 //  fGasThickness = 14.*mm*4;
   fGasThickness = 10.*mm;

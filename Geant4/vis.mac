@@ -1,26 +1,28 @@
-#/control/verbose 2
-#/run/verbose 2
+/control/verbose 2
+/run/verbose 2
+#/tracking/verbose 2
 #
-/testem/phys/addPhysics  pai
-#/testem/phys/addPhysics  pai_photon
+#  select EM PhysicsList
+#
+/testem/phys/addPhysics emstandard_opt3
+/process/em/AddPAIRegion all GasDetector pai
+
+/cuts/setLowEdge 30.00 eV
+/cuts/setHighEdge 100.00 GeV
+
 #
 #/testem/stepMax         10 mm
 #
-/testem/phys/setNbinsE 20
-/testem/phys/setMaxE 0.060  MeV  
+/testem/histo/setRootTreeName Lcut=60eV
+
 #
 /run/initialize
 #
-/run/setCut  0.1 mm
-/run/setCutForRegion GasDetector 0.1 mm
+/run/setCut  0.0001 mm
+/run/setCutForRegion GasDetector 0.0001 mm
 /run/particle/dumpCutValues
-#
+
 /gun/particle e-
-#
-#/gun/particle proton
-#
-#/gun/particle mu-
-# 
 /gun/energy 3.00 MeV
 
 /vis/open HepRepFile

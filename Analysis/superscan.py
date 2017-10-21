@@ -9,7 +9,7 @@ from fig2LaTeX import halfwidth, fullwidth
 line_colors = {"SecTotalEn": r.kRed, 
                "NePerTrack_Counted": r.kYellow + 3,
                "fEkinLost": r.kBlue,
-               "TotalEDep": r.kGreen}
+               "TotalEDep": r.kGreen - 2}
 
 def fmean(l):
     return sum(l) / float(len(l))
@@ -40,7 +40,7 @@ def add_lines(results):
     
     ####
     gr = r.TGraph()
-    gr.SetName("Ekin_created - Ekin_lost")
+    gr.SetName("Ekin_created - Ekin_lost [keV]")
     gr.SetLineWidth(2)
     gr.SetLineColor(r.kMagenta + 1)
     for i in range(n_points):
@@ -50,7 +50,7 @@ def add_lines(results):
     ####
     I = 24.6e-3
     gr = r.TGraph()
-    gr.SetName("Ekin_created - Ekin_lost + N*I")
+    gr.SetName("Ekin_created - Ekin_lost + N*I [keV]")
     gr.SetLineWidth(2)
     gr.SetLineColor(r.kOrange - 3)
     for i in range(n_points):
@@ -124,7 +124,7 @@ def plot_comparison(G4_res_file):
 #     c1.SetLogy()
     
     # Legend
-    legend = r.TLegend(0.45,0.5,0.9,0.9);
+    legend = r.TLegend(0.45,0.55,0.9,0.9);
     for _, gr in results_to_draw:
         legend.AddEntry(gr, gr.GetName(), "l");
     legend.Draw();
@@ -136,7 +136,7 @@ def plot_comparison(G4_res_file):
      
     
 if __name__ == "__main__":
-    Geant4_results_file = "../Geant4/Results/1cm_HeIBut_80_20.root"
+    Geant4_results_file = "../Geant4/Results/10mm_HeIBut_90_10.root"
     plot_comparison(Geant4_results_file)
 
 
